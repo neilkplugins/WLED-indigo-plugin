@@ -17,3 +17,5 @@ I have had limited opportunity to test, nothing should cause any issues however 
 Cautions:
 
 I am not an expert on WLED and the test usage is a single strip. I have not as yet considered any kind of throttling of API requests, and this initial version hits both JSON and XML api's so it does double up a bit. We just need to do some more real world testing.
+
+PLEASE BE AWARE You may need to delete and re-create devices as I add additional states, this will also impacy actions, schedules that reference the device, so don't invest too much time and effort in that until we are closer to a beta release.
