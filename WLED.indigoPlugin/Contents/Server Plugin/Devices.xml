@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<Devices>
+	<!-- Define some devices -->
+	<Device type="dimmer" id="wledip">
+		<Name>WLED IP Controller</Name>
+		<ConfigUI>
+			<Field id="ipaddress" type="textfield">
+				<Label>Enter WLED IP Address:</Label>
+			</Field>
+			<Field id="label" type="label" fontSize="small" fontColor="darkgray">
+				<Label>Enter the IP Address of the WLED controller</Label>
+			</Field>
+			<Field type="checkbox" id="supportsRGB" defaultValue="true" hidden="true">
+				<Label>Supports RGB:</Label>
+				<Description>Shows RGB control and level fields in UI</Description>
+			</Field>	
+		</ConfigUI>
+		<States>
+			<State id="brightness">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Brightness</TriggerLabel>
+				<ControlPageLabel>Master Brightness</ControlPageLabel>
+			</State>
+			<State id="transition">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Transition</TriggerLabel>
+				<ControlPageLabel>Duration of the crossfade between different colors/brightness levels.</ControlPageLabel>
+			</State>
+			<State id="preset">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Preset</TriggerLabel>
+				<ControlPageLabel>Current Preset ID</ControlPageLabel>
+			</State>
+			<State id="playlist">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Playlist</TriggerLabel>
+				<ControlPageLabel>Playlist</ControlPageLabel>
+			</State>
+			<State id="nightlight">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Night Light</TriggerLabel>
+				<ControlPageLabel>Night Light State</ControlPageLabel>
+				</State>
+				<State id="nightlightduration">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Night Light Time</TriggerLabel>
+				<ControlPageLabel>Night Light Duration</ControlPageLabel>
+			</State>
+			<State id="effect">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Effect Identifier</TriggerLabel>
+				<ControlPageLabel>Effect Identifier</ControlPageLabel>
+				</State>
+				<State id="effectspeed">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Effect Speed</TriggerLabel>
+				<ControlPageLabel>Effect Speed</ControlPageLabel>
+			</State>
+				<State id="effectintensity">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Effect Intensity</TriggerLabel>
+				<ControlPageLabel>Effect Intensity</ControlPageLabel>
+				</State>
+				<State id="palette">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Colour Palette ID</TriggerLabel>
+				<ControlPageLabel>Colour Palette</ControlPageLabel>
+			</State>
+				<State id="redvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Red Value</TriggerLabel>
+				<ControlPageLabel>Red Value</ControlPageLabel>
+			</State>
+				<State id="greenvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Green Value</TriggerLabel>
+				<ControlPageLabel>Green Value</ControlPageLabel>
+			</State>
+				<State id="bluevalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Blue Value</TriggerLabel>
+				<ControlPageLabel>Blue Value</ControlPageLabel>
+			</State>
+		</States>
+	</Device>
+</Devices>
