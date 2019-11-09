@@ -9,10 +9,10 @@ The plugin currently supports :-
 2) Master Strip Power on, and off
 3) WLED States that are reflected in the device, currently polled every 60s (this will be configurable when I get around to it).  I have not mapped everyhting but it should be simple to add things you need.  I have focussed more on the plugin than WLED functionality at this stage so feel free to ask if I missed something useful.  I also don't want to drown the NodeMCU with requests, so it is a balance.  You can adjust in the plugin code for now if you want to experiment
 4) The Indigo Dimmer device, and "Set Brightness" actions control the master WLED brightness.
-5) You can select the "effect" from a pull down in the set effect options.  I will be adding palette, speed and intensity actions.
+5) I have implemented three effect related actions, allowing you to set an effect type, speed and intensity.  Other actions will be added pretty frequently.
 6) My intent is to make the primary RGB settings (in fact it is part implemented) controllable in the indigo device as well as by action
 7) I will add actions over time for the remaining items you can set via the API, I have it largely figured out, it is just time.
-I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.  You may see functions (like energy usage) and other that look like they work. but may not.  They are hangovers from the sample plugins, and I may do some things with them, or more likely remove if they make no sense for WLED.
+I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.  You may see functions (like energy usage) and other that look like they work. but may not.  They are hangovers from the sample plugins, and I may do some things with them, or more likely remove if they make no sense for WLED.  Also I have implemented very little error handling, this will come when I have base functionality done and before I suggest published in the Indigo Store.  I have also requested a sub forum for the WLED plugin on the Indigo forum. 
 
 Cautions:
 
