@@ -18,8 +18,10 @@ from xml.dom.minidom import parseString
 # Globals
 ################################################################################
 theUrlBase = u"/json"
-#TODO get this list by device and build dynamically as potentially future versions will break this and changes to effects will need manual updates, used in the genEffectsList and Effects methods		
+#TODO get these lists by device and build dynamically as potentially future versions will break this and changes to effects will need manual updates, used in the genEffectsList and Effects methods		
 wledeffects = [u'Solid', u'Blink', u'Breathe', u'Wipe', u'Wipe Random', u'Random Colors', u'Sweep', u'Dynamic', u'Colorloop', u'Rainbow', u'Scan', u'Dual Scan', u'Fade', u'Chase', u'Chase Rainbow', u'Running', u'Saw', u'Twinkle', u'Dissolve', u'Dissolve Rnd', u'Sparkle', u'Dark Sparkle', u'Sparkle+', u'Strobe', u'Strobe Rainbow', u'Mega Strobe', u'Blink Rainbow', u'Android', u'Chase', u'Chase Random', u'Chase Rainbow', u'Chase Flash', u'Chase Flash Rnd', u'Rainbow Runner', u'Colorful', u'Traffic Light', u'Sweep Random', u'Running 2', u'Red & Blue', u'Stream', u'Scanner', u'Lighthouse', u'Fireworks', u'Rain', u'Merry Christmas', u'Fire Flicker', u'Gradient', u'Loading', u'In Out', u'In In', u'Out Out', u'Out In', u'Circus', u'Halloween', u'Tri Chase', u'Tri Wipe', u'Tri Fade', u'Lightning', u'ICU', u'Multi Comet', u'Dual Scanner', u'Stream 2', u'Oscillate', u'Pride 2015',u'Juggle', u'Palette', u'Fire 2012', u'Colorwaves', u'BPM', u'Fill Noise', u'Noise 1', u'Noise 2', u'Noise 3', u'Noise 4', u'Colortwinkles', u'Lake', u'Meteor', u'Smooth Meteor', u'Railway', u'Ripple', u'Twinklefox', u'Twinklecat', u'Halloween Eyes']
+palettes = [u'Default', u'Random Cycle', u'Primary Color', u'Based on Primary', u'Set Colors', u'Based on Set', u'Party', u'Cloud', u'Lava', u'Ocean', u'Forest', u'Rainbow', u'Rainbow Bands', u'Sunset', u'Rivendell', u'Breeze', u'Red & Blue', u'Yellowout', u'Analogous', u'Splash', u'Pastel', u'Sunset 2', u'Beech', u'Vintage', u'Departure', u'Landscape', u'Beach', u'Sherbet', u'Hult', u'Hult 64', u'Drywet', u'Jul', u'Grintage', u'Rewhi', u'Tertiary', u'Fire', u'Icefire', u'Cyane', u'Light Pink', u'Autumn', u'Magenta', u'Magred', u'Yelmag', u'Yelblu', u'Orange & Teal', u'Tiamat', u'April Night', u'Orangery', u'C9', u'Sakura']
+
 
 
 ########################################
@@ -66,7 +68,7 @@ class Plugin(indigo.PluginBase):
 				# we sleep (1 minutes) first because when the plugin starts, each device
 				# is updated as they are started.
 				# This will be configurable in a future version, for now just change the number of seconds in the line below
-				self.sleep(1 * 60)
+				self.sleep(1 * int(self.pluginPrefs["pollingFrequency"]) )
 				# now we cycle through each WLED
 				for deviceId in self.deviceList:
 					# call the update method with the device instance
@@ -99,6 +101,7 @@ class Plugin(indigo.PluginBase):
 		doctree = parseString ( statexml )
 		#Un comment below to help diagnose xml state changes for testing
 		#self.debugLog(statexml)
+		self.debugLog(wledstate)
 		# parse out the elements which I know is really ugly, I will sort this to do it properly I promise
 		#calculate the UI adjusted brightness to match the UI (0 -100 %) versus 0-255 for device
 		adjustedbrightness = int(round(int(doctree.getElementsByTagName('ac')[0].childNodes[0].data)/2.55))
@@ -107,6 +110,7 @@ class Plugin(indigo.PluginBase):
 		device.updateStateOnServer("onOffState", wledstate["on"])
 		device.updateStateOnServer("preset", wledstate["ps"])
 		device.updateStateOnServer("transition", wledstate["transition"])
+		self.debugLog(wledstate["transition"])
 		#device.updateStateOnServer("palette", wledstate["pal"])
 		device.updateStateOnServer("playlist", wledstate["pl"])
 		device.updateStateOnServer("effect", doctree.getElementsByTagName('fx')[0].childNodes[0].data)
@@ -114,9 +118,9 @@ class Plugin(indigo.PluginBase):
 		device.updateStateOnServer("effectspeed", doctree.getElementsByTagName('sx')[0].childNodes[0].data)
 		device.updateStateOnServer("nightlight", doctree.getElementsByTagName('nl')[0].childNodes[0].data)
 		device.updateStateOnServer("nightlightduration", doctree.getElementsByTagName('nd')[0].childNodes[0].data)
-		device.updateStateOnServer("bluevalue", doctree.getElementsByTagName('cl')[2].childNodes[0].data)
-		device.updateStateOnServer("redvalue", doctree.getElementsByTagName('cl')[0].childNodes[0].data)
-		device.updateStateOnServer("greenvalue", doctree.getElementsByTagName('cl')[1].childNodes[0].data)
+		device.updateStateOnServer("primarybluevalue", doctree.getElementsByTagName('cl')[2].childNodes[0].data)
+		device.updateStateOnServer("primaryredvalue", doctree.getElementsByTagName('cl')[0].childNodes[0].data)
+		device.updateStateOnServer("primarygreenvalue", doctree.getElementsByTagName('cl')[1].childNodes[0].data)
 		
 
 
@@ -327,85 +331,7 @@ class Plugin(indigo.PluginBase):
 				# Else log failure but do NOT update state on Indigo Server.
 				indigo.server.log(u"send \"%s\" %s to %d failed" % (dev.name, "dim", newBrightness), isError=True)
 
-		###### SET COLOR LEVELS ######
-		elif action.deviceAction == indigo.kDeviceAction.SetColorLevels:
-			# action.actionValue is a dict containing the color channel key/value
-			# pairs. All color channel keys (redLevel, greenLevel, etc.) are optional
-			# so plugin should handle cases where some color values are not specified
-			# in the action.
-			actionColorVals = action.actionValue
-
-			# Construct a list of channel keys that are possible for what this device
-			# supports. It may not support RGB or may not support white levels, for
-			# example, depending on how the device's properties (SupportsColor, SupportsRGB,
-			# SupportsWhite, SupportsTwoWhiteLevels, SupportsWhiteTemperature) have
-			# been specified.
-			channelKeys = []
-			usingWhiteChannels = False
-			if dev.supportsRGB:
-				channelKeys.extend(['redLevel', 'greenLevel', 'blueLevel'])
-			if dev.supportsWhite:
-				channelKeys.extend(['whiteLevel'])
-				usingWhiteChannels = True
-			if dev.supportsTwoWhiteLevels:
-				channelKeys.extend(['whiteLevel2'])
-			elif dev.supportsWhiteTemperature:
-				channelKeys.extend(['whiteTemperature'])
-			# Note having 2 white levels (cold and warm) takes precedence over
-			# the use of a white temperature value. You cannot have both, although
-			# you can have a single white level and a white temperature value.
-
-			# Next enumerate through the possible color channels and extract that
-			# value from the actionValue (actionColorVals).
-			keyValueList = []
-			resultVals = []
-			for channel in channelKeys:
-				if channel in actionColorVals:
-					brightness = float(actionColorVals[channel])
-					brightnessByte = int(round(255.0 * (brightness / 100.0)))
-	
-					# Command hardware module (dev) to change its color level here:
-					# ** IMPLEMENT ME **
-
-					if channel in dev.states:
-						keyValueList.append({'key':channel, 'value':brightness})
-					result = str(int(round(brightness)))
-				elif channel in dev.states:
-					# If the action doesn't specify a level that is needed (say the
-					# hardware API requires a full RGB triplet to be specified, but
-					# the action only contains green level), then the plugin could
-					# extract the currently cached red and blue values from the
-					# dev.states[] dictionary:
-					cachedBrightness = float(dev.states[channel])
-					cachedBrightnessByte = int(round(255.0 * (cachedBrightness / 100.0)))
-					# Could show in the Event Log '--' to indicate this level wasn't
-					# passed in by the action:
-					result = '--'
-					# Or could show the current device state's cached level:
-					#	result = str(int(round(cachedBrightness)))
-
-				# Add a comma to separate the RGB values from the white values for logging.
-				if channel == 'blueLevel' and usingWhiteChannels:
-					result += ","
-				elif channel == 'whiteTemperature' and result != '--':
-					result += " K"
-				resultVals.append(result)
-			# Set to False if it failed.
-			sendSuccess = True
-
-			resultValsStr = ' '.join(resultVals)
-			if sendSuccess:
-				# If success then log that the command was successfully sent.
-				indigo.server.log(u"sent \"%s\" %s to %s" % (dev.name, "set color", resultValsStr))
-
-				# And then tell the Indigo Server to update the color level states:
-				if len(keyValueList) > 0:
-					dev.updateStatesOnServer(keyValueList)
-					
-				
-				else:
-					# Else log failure but do NOT update state on Indigo Server.
-					indigo.server.log(u"send \"%s\" %s to %s failed" % (dev.name, "set color", resultValsStr), isError=True)
+		
 
 	########################################
 	# General Action callback  - for WLED none of these are implemented and some will likely be removed, just left from sample plugin for now

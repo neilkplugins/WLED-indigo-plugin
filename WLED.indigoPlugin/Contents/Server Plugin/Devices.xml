@@ -66,17 +66,31 @@
 				<TriggerLabel>Colour Palette ID</TriggerLabel>
 				<ControlPageLabel>Colour Palette</ControlPageLabel>
 			</State>
-				<State id="redvalue">
+				<State id="primaryredvalue">
 				<ValueType>Number</ValueType>
 				<TriggerLabel>Red Value</TriggerLabel>
 				<ControlPageLabel>Red Value</ControlPageLabel>
 			</State>
-				<State id="greenvalue">
+				<State id="primarygreenvalue">
 				<ValueType>Number</ValueType>
 				<TriggerLabel>Green Value</TriggerLabel>
 				<ControlPageLabel>Green Value</ControlPageLabel>
 			</State>
-				<State id="bluevalue">
+				<State id="primarybluevalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Blue Value</TriggerLabel>
+				<ControlPageLabel>Blue Value</ControlPageLabel></State>
+				<State id="secondaryredvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Red Value</TriggerLabel>
+				<ControlPageLabel>Red Value</ControlPageLabel>
+			</State>
+				<State id="secondarygreenvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Green Value</TriggerLabel>
+				<ControlPageLabel>Green Value</ControlPageLabel>
+			</State>
+				<State id="secondarybluevalue">
 				<ValueType>Number</ValueType>
 				<TriggerLabel>Blue Value</TriggerLabel>
 				<ControlPageLabel>Blue Value</ControlPageLabel>
