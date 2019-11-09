@@ -12,7 +12,7 @@ The plugin currently supports :-
 5) You can select the "effect" from a pull down in the set effect options.  I will be adding palette, speed and intensity actions.
 6) My intent is to make the primary RGB settings (in fact it is part implemented) controllable in the indigo device as well as by action
 7) I will add actions over time for the remaining items you can set via the API, I have it largely figured out, it is just time.
-I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk
+I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.  You may see functions (like energy usage) and other that look like they work. but may not.  They are hangovers from the sample plugins, and I may do some things with them, or more likely remove if they make no sense for WLED.
 
 Cautions:
 
