@@ -12,7 +12,6 @@ import indigo
 import requests
 import urllib2
 import json
-from xml.dom.minidom import parseString
 
 ################################################################################
 # Globals
@@ -20,7 +19,7 @@ from xml.dom.minidom import parseString
 theUrlBase = u"/json"
 #TODO get these lists by device and build dynamically as potentially future versions will break this and changes to effects will need manual updates, used in the genEffectsList and Effects methods		
 wledeffects = [u'Solid', u'Blink', u'Breathe', u'Wipe', u'Wipe Random', u'Random Colors', u'Sweep', u'Dynamic', u'Colorloop', u'Rainbow', u'Scan', u'Dual Scan', u'Fade', u'Chase', u'Chase Rainbow', u'Running', u'Saw', u'Twinkle', u'Dissolve', u'Dissolve Rnd', u'Sparkle', u'Dark Sparkle', u'Sparkle+', u'Strobe', u'Strobe Rainbow', u'Mega Strobe', u'Blink Rainbow', u'Android', u'Chase', u'Chase Random', u'Chase Rainbow', u'Chase Flash', u'Chase Flash Rnd', u'Rainbow Runner', u'Colorful', u'Traffic Light', u'Sweep Random', u'Running 2', u'Red & Blue', u'Stream', u'Scanner', u'Lighthouse', u'Fireworks', u'Rain', u'Merry Christmas', u'Fire Flicker', u'Gradient', u'Loading', u'In Out', u'In In', u'Out Out', u'Out In', u'Circus', u'Halloween', u'Tri Chase', u'Tri Wipe', u'Tri Fade', u'Lightning', u'ICU', u'Multi Comet', u'Dual Scanner', u'Stream 2', u'Oscillate', u'Pride 2015',u'Juggle', u'Palette', u'Fire 2012', u'Colorwaves', u'BPM', u'Fill Noise', u'Noise 1', u'Noise 2', u'Noise 3', u'Noise 4', u'Colortwinkles', u'Lake', u'Meteor', u'Smooth Meteor', u'Railway', u'Ripple', u'Twinklefox', u'Twinklecat', u'Halloween Eyes']
-palettes = [u'Default', u'Random Cycle', u'Primary Color', u'Based on Primary', u'Set Colors', u'Based on Set', u'Party', u'Cloud', u'Lava', u'Ocean', u'Forest', u'Rainbow', u'Rainbow Bands', u'Sunset', u'Rivendell', u'Breeze', u'Red & Blue', u'Yellowout', u'Analogous', u'Splash', u'Pastel', u'Sunset 2', u'Beech', u'Vintage', u'Departure', u'Landscape', u'Beach', u'Sherbet', u'Hult', u'Hult 64', u'Drywet', u'Jul', u'Grintage', u'Rewhi', u'Tertiary', u'Fire', u'Icefire', u'Cyane', u'Light Pink', u'Autumn', u'Magenta', u'Magred', u'Yelmag', u'Yelblu', u'Orange & Teal', u'Tiamat', u'April Night', u'Orangery', u'C9', u'Sakura']
+wledpalettes = [u'Default', u'Random Cycle', u'Primary Color', u'Based on Primary', u'Set Colors', u'Based on Set', u'Party', u'Cloud', u'Lava', u'Ocean', u'Forest', u'Rainbow', u'Rainbow Bands', u'Sunset', u'Rivendell', u'Breeze', u'Red & Blue', u'Yellowout', u'Analogous', u'Splash', u'Pastel', u'Sunset 2', u'Beech', u'Vintage', u'Departure', u'Landscape', u'Beach', u'Sherbet', u'Hult', u'Hult 64', u'Drywet', u'Jul', u'Grintage', u'Rewhi', u'Tertiary', u'Fire', u'Icefire', u'Cyane', u'Light Pink', u'Autumn', u'Magenta', u'Magred', u'Yelmag', u'Yelblu', u'Orange & Teal', u'Tiamat', u'April Night', u'Orangery', u'C9', u'Sakura']
 
 
 
@@ -81,7 +80,6 @@ class Plugin(indigo.PluginBase):
 		self.debugLog("Updating device: " + device.name)
 		# download the file
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json"
-		thexUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/win"
 		#TODO This is a horrible kludge for now while I work out how to properly flatten the JSON so I am using both HTTP and JSON API'S
 		#Ignore it for now
 		# trying to figure out RGB device UI ----self.debugLog(device.pluginProps["supportsRGB"])
@@ -93,35 +91,42 @@ class Plugin(indigo.PluginBase):
 		except Exception, e:
 			self.errorLog("Unknown error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
 			return
-		theJSON = json.load(urllib2.urlopen(theUrl))
-		wledeffects = theJSON.get("effects")		
-		wledstate = theJSON.get("state")
-		xmlfile = urllib2.urlopen( thexUrl )
-		statexml = xmlfile.read()
-		doctree = parseString ( statexml )
-		#Un comment below to help diagnose xml state changes for testing
-		#self.debugLog(statexml)
-		self.debugLog(wledstate)
+		#Get the JSON from the WLED to update device states
+		statusjson = json.load(urllib2.urlopen(theUrl))
+		#Un comment below to help diagnose JSON state changes for testing
+		#self.debugLog(statusjson)
 		# parse out the elements which I know is really ugly, I will sort this to do it properly I promise
-		#calculate the UI adjusted brightness to match the UI (0 -100 %) versus 0-255 for device
-		adjustedbrightness = int(round(int(doctree.getElementsByTagName('ac')[0].childNodes[0].data)/2.55))
-		device.updateStateOnServer("brightness", doctree.getElementsByTagName('ac')[0].childNodes[0].data)
-		device.updateStateOnServer("brightnessLevel",adjustedbrightness)
-		device.updateStateOnServer("onOffState", wledstate["on"])
-		device.updateStateOnServer("preset", wledstate["ps"])
-		device.updateStateOnServer("transition", wledstate["transition"])
-		self.debugLog(wledstate["transition"])
-		#device.updateStateOnServer("palette", wledstate["pal"])
-		device.updateStateOnServer("playlist", wledstate["pl"])
-		device.updateStateOnServer("effect", doctree.getElementsByTagName('fx')[0].childNodes[0].data)
-		device.updateStateOnServer("effectintensity", doctree.getElementsByTagName('ix')[0].childNodes[0].data)
-		device.updateStateOnServer("effectspeed", doctree.getElementsByTagName('sx')[0].childNodes[0].data)
-		device.updateStateOnServer("nightlight", doctree.getElementsByTagName('nl')[0].childNodes[0].data)
-		device.updateStateOnServer("nightlightduration", doctree.getElementsByTagName('nd')[0].childNodes[0].data)
-		device.updateStateOnServer("primarybluevalue", doctree.getElementsByTagName('cl')[2].childNodes[0].data)
-		device.updateStateOnServer("primaryredvalue", doctree.getElementsByTagName('cl')[0].childNodes[0].data)
-		device.updateStateOnServer("primarygreenvalue", doctree.getElementsByTagName('cl')[1].childNodes[0].data)
 		
+		#calculate the UI adjusted brightness to match the UI (0 -100 %) versus 0-255 for device
+		adjustedbrightness = int(round(int(statusjson['state']['bri'])/2.55))
+		
+		#Update Device States
+		# First two may be useful in the future, as WLED will support multiple segments in a single controller
+		device.updateStateOnServer("WLEDversion", statusjson['info']['ver'])
+		device.updateStateOnServer("WLEDfreeheap", statusjson['info']['freeheap'])
+		# Now for the useful states 
+		device.updateStateOnServer("brightness", statusjson['state']['bri'])
+		device.updateStateOnServer("brightnessLevel",adjustedbrightness)
+		device.updateStateOnServer("onOffState", statusjson['state']['on'])
+		device.updateStateOnServer("preset", statusjson['state']['ps'])
+		device.updateStateOnServer("transition", statusjson['state']['transition'])
+		# For the Palette we will also set a matching palette name
+		device.updateStateOnServer("palette", statusjson['state']['seg'][0]['pal'])
+		device.updateStateOnServer("palettename", wledpalettes[statusjson['state']['seg'][0]['fx']])
+		device.updateStateOnServer("playlist", statusjson['state']['pl'])
+		# For the effect we will also find the matching state name from the list
+		device.updateStateOnServer("effect", statusjson['state']['seg'][0]['fx'])
+		device.updateStateOnServer("effectname", wledeffects[statusjson['state']['seg'][0]['fx']])
+		device.updateStateOnServer("effectintensity", statusjson['state']['seg'][0]['ix'])
+		device.updateStateOnServer("effectspeed", statusjson['state']['seg'][0]['sx'])
+		device.updateStateOnServer("nightlight", statusjson['state']['nl']['on'])
+		device.updateStateOnServer("nightlightduration", statusjson['state']['nl']['dur'])
+		device.updateStateOnServer("primarybluevalue", statusjson['state']['seg'][0]['col'][0][2])
+		device.updateStateOnServer("primaryredvalue", statusjson['state']['seg'][0]['col'][0][0])
+		device.updateStateOnServer("primarygreenvalue", statusjson['state']['seg'][0]['col'][0][1])
+		device.updateStateOnServer("secondarybluevalue", statusjson['state']['seg'][0]['col'][1][2])
+		device.updateStateOnServer("secondaryredvalue", statusjson['state']['seg'][0]['col'][1][0])
+		device.updateStateOnServer("secondarygreenvalue", statusjson['state']['seg'][0]['col'][1][1])	
 
 
 		
@@ -239,7 +244,7 @@ class Plugin(indigo.PluginBase):
 				indigo.server.log(u"send \"%s\" %s failed" % (dev.name, "toggle"), isError=True)
 
 		###### SET BRIGHTNESS ######
-		# Implemented for LED but will be tidied up
+		# Implemented for WLED but will be tidied up
 		elif action.deviceAction == indigo.kDeviceAction.SetBrightness:
 			newBrightness = action.actionValue
 			self.debugLog(newBrightness)
