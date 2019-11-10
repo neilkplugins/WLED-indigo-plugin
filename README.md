@@ -19,4 +19,7 @@ Cautions:
 
 I am not an expert on WLED and the test usage is a single strip. I have not as yet considered any kind of throttling of API requests. We just need to do some more real world testing.  For now I am just relying on polling frequency changes via the overall plugin configuration (Plugins-WLED-Configure)
 
-PLEASE BE AWARE You may need to delete and re-create devices as I add additional states, this will also impact actions, schedules that reference the device, so don't invest too much time and effort in that until we are closer to a beta release.
+PLEASE BE AWARE You may need to open and resave the device configuration as I add additional states, this will also impact actions, schedules that reference the device.  Do this if you get an error like
+"Error device "WLED1" state key primarybluevalue not defined (ignoring update request)"
+then opening and resaving the configuration should resolve it.
+
