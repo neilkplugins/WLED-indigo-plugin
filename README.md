@@ -6,7 +6,7 @@ This initial version should be considered very much "Alpha", and used only if yo
 The plugin currently supports :-
 
 1) Creation of Multiple WLED Devices, the only device property is the WLED IP Address and this currently has no validtation or error checking
-2) Master Strip Power on, and off
+2) Master Strip/String Power on, and off
 3) WLED States that are reflected in the device are by default currently polled every 60s (this can be configured in the plugin configuration).  I have not mapped everything but it should be simple to add things you need.  I have focussed more on the plugin than WLED functionality at this stage so feel free to ask if I missed something useful.  I also don't want to drown the NodeMCU with requests, so it is a balance.
 4) The Indigo Dimmer device, and "Set Brightness" actions control the master WLED brightness.
 5) I have implemented three effect related actions, allowing you to set an effect type, speed and intensity.  Other actions will be added as soon as I can.
