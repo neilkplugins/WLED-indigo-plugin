@@ -1,5 +1,5 @@
 # WLED-indigo-plugin
-This Indigo Plugin supports the WLED software from http:://wled.me
+This Indigo Plugin supports the excellent WLED software from http:://wled.me
 
 This initial version should be considered very much "Alpha", and used only if you don't mind finding issues as you will, and reporting them to me to fix whenever I find time.
 
