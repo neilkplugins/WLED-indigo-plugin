@@ -23,7 +23,7 @@ wledpalettes = [u'Default', u'Random Cycle', u'Primary Color', u'Based on Primar
 
 
 
-########################################
+######################################## Do I need or use this ??
 def updateVar(name, value, folder=0):
 	if name not in indigo.variables:
 		indigo.variable.create(name, value=value, folder=folder)
@@ -78,13 +78,9 @@ class Plugin(indigo.PluginBase):
 	########################################
 	def update(self,device):
 		self.debugLog("Updating device: " + device.name)
-		# download the file
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json"
-		#TODO This is a horrible kludge for now while I work out how to properly flatten the JSON so I am using both HTTP and JSON API'S
-		#Ignore it for now
-		# trying to figure out RGB device UI ----self.debugLog(device.pluginProps["supportsRGB"])
 		try:
-			f = urllib2.urlopen(theUrl)
+			f = urllib2.urlopen(theUrl, timeout=1)
 		except urllib2.HTTPError, e:
 			self.errorLog("HTTP error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
 			return
@@ -92,7 +88,7 @@ class Plugin(indigo.PluginBase):
 			self.errorLog("Unknown error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
 			return
 		#Get the JSON from the WLED to update device states
-		statusjson = json.load(urllib2.urlopen(theUrl))
+		statusjson = json.load(urllib2.urlopen(theUrl,timeout=1))
 		#Un comment below to help diagnose JSON state changes for testing
 		#self.debugLog(statusjson)
 		# parse out the elements which I know is really ugly, I will sort this to do it properly I promise
@@ -112,7 +108,7 @@ class Plugin(indigo.PluginBase):
 		device.updateStateOnServer("transition", statusjson['state']['transition'])
 		# For the Palette we will also set a matching palette name
 		device.updateStateOnServer("palette", statusjson['state']['seg'][0]['pal'])
-		device.updateStateOnServer("palettename", wledpalettes[statusjson['state']['seg'][0]['fx']])
+		device.updateStateOnServer("palettename", wledpalettes[statusjson['state']['seg'][0]['pal']])
 		device.updateStateOnServer("playlist", statusjson['state']['pl'])
 		# For the effect we will also find the matching state name from the list
 		device.updateStateOnServer("effect", statusjson['state']['seg'][0]['fx'])
@@ -132,12 +128,6 @@ class Plugin(indigo.PluginBase):
 		
 		
 
-	########################################
-#	def updateKeyValueList(self, device, staewValue, keyValueList):
-#		if (newValue != device.states[state]):
-#			if state == "currentConditionIcon":
-#				newValue = newValue.split(".")[0]
-#			keyValueList.append({'key':state, 'value':newValue})
 
 	########################################
 	# UI Validate, Close, and Actions defined in Actions.xml:
@@ -147,7 +137,7 @@ class Plugin(indigo.PluginBase):
 		valuesDict['ipaddress'] = wledIP
 		theUrl = u"http://"+ wledIP+ theUrlBase
 		try:
-			urllib2.urlopen(theUrl)
+			urllib2.urlopen(theUrl,timeout=1)
 		except urllib2.HTTPError, e:
 			errorsDict = indigo.Dict()
 			errorsDict['ipaddress'] = "WLED not found or isn't responding"
@@ -360,18 +350,23 @@ class Plugin(indigo.PluginBase):
 			# Query hardware module (dev) for its current status here:
 			# ** IMPLEMENT ME **
 			indigo.server.log(u"sent \"%s\" %s" % (dev.name, "status request WLED not Implemented"))
-			
+	#####
+	## Create the lists for the action menus, need to make this 		
 	
 	def genEffectsList(self, filter="", valuesDict=None, typeId="",targetId=0):
 		#TODO make this really dynamic by looking up by device. shouldn't be an issue if all wleds are on the same version, currently just refers to global variable
 		return  wledeffects
 	
+	def genPaletteList(self, filter="", valuesDict=None, typeId="",targetId=0):
+		#TODO make this really dynamic by looking up by device. shouldn't be an issue if all wleds are on the same version, currently just refers to global variable
+		return  wledpalettes
+	
 	###### SET EFFECT WLED METHOD ######
 	def setEffect(self, pluginAction, dev):
 				self.debugLog(pluginAction)
 				newEffect = pluginAction.props.get("effectdescription")
-				effectIndex =wledeffects.index(newEffect[0])
-				self.debugLog("New Effect is "+newEffect[0]+" with index number "+str(effectIndex))
+				effectIndex =wledeffects.index(newEffect)
+				self.debugLog("New Effect is "+newEffect+" with index number "+str(effectIndex))
 				jsondata = json.dumps({ "seg":[{"fx":effectIndex}]})
 				self.debugLog(jsondata)
 				try:
@@ -388,10 +383,12 @@ class Plugin(indigo.PluginBase):
 
 				if sendSuccess:
 				# If success then log that the command was successfully sent.
-					indigo.server.log(u"sent \"%s\" %s to %d which is %s" % (dev.name, "set effect", effectIndex, newEffect[0]))
+					indigo.server.log(u"sent \"%s\" %s to %d which is %s" % (dev.name, "set effect", effectIndex, newEffect))
 
 					# And then tell the Indigo Server to update the state:
 					dev.updateStateOnServer("effect", effectIndex)
+					dev.updateStateOnServer("effectname", wledeffects[effectIndex])
+
 
 	###### SET EFFECT Intensity WLED METHOD ######
 	def setEffectIntensity(self, pluginAction, dev):
@@ -444,4 +441,34 @@ class Plugin(indigo.PluginBase):
 
 					# And then tell the Indigo Server to update the state:
 					dev.updateStateOnServer("effectspeed", newSpeed)
+
+
+	###### SET PALETTE WLED METHOD ######
+	def setEffectPalette(self, pluginAction, dev):
+				self.debugLog(pluginAction)
+				newPalette = pluginAction.props.get("palettedescription")
+				self.debugLog(newPalette)
+				paletteIndex =wledpalettes.index(newPalette)
+				self.debugLog("New Palette is "+newPalette+" with index number "+str(paletteIndex))
+				jsondata = json.dumps({ "seg":[{"pal":paletteIndex}]})
+				self.debugLog(jsondata)
+				try:
+					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					self.debugLog(wledeffectresponse)
+					if wledeffectresponse.status_code == 200:
+    						sendSuccess = True
+					else:
+							sendSuccess = False
+				except:
+					sendSuccess = False
+
+#			sendSuccess = True		# Set to False if it failed.
+
+				if sendSuccess:
+				# If success then log that the command was successfully sent.
+					indigo.server.log(u"sent \"%s\" %s to %d which is %s" % (dev.name, "set effect", paletteIndex, newPalette[0]))
+
+					# And then tell the Indigo Server to update the state:
+					dev.updateStateOnServer("palette", paletteIndex)
+					dev.updateStateOnServer("palettename", wledpalettes[paletteIndex])
 

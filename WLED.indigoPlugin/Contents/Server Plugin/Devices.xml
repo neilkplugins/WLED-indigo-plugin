@@ -18,12 +18,12 @@
 		<States>
 			<State id="WLEDversion" defaultValue="Unknown">
 				<ValueType>String</ValueType>
-				<TriggerLabel>WLED Software Version</TriggerLabel>
+				<TriggerLabel>WLED Software Version Change</TriggerLabel>
 				<ControlPageLabel>WLED Software Version</ControlPageLabel>
 			</State>
 			<State id="WLEDfreeheap">
 				<ValueType>Number</ValueType>
-				<TriggerLabel>WLED Memory Usage</TriggerLabel>
+				<TriggerLabel>WLED Memory Usage Change</TriggerLabel>
 				<ControlPageLabel>WLED Memory Usage</ControlPageLabel>
 				</State>
 			<State id="brightness">
@@ -43,7 +43,7 @@
 			</State>
 			<State id="playlist">
 				<ValueType>Number</ValueType>
-				<TriggerLabel>Playlist</TriggerLabel>
+				<TriggerLabel>Playlist Change</TriggerLabel>
 				<ControlPageLabel>Playlist Change</ControlPageLabel>
 			</State>
 			<State id="nightlight">
