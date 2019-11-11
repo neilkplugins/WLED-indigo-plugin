@@ -8,12 +8,12 @@ The plugin currently supports :-
 1) Creation of Multiple WLED Devices, the only device property is the WLED IP Address and this currently has no validation or error checking
 2) Master Strip/String Power on, and off
 3) WLED States that are reflected in the device are by default currently polled every 60s (this can be configured in the plugin configuration).  I have not mapped everything but it should be simple to add things you need.  I have focussed more on the plugin than WLED functionality at this stage so feel free to ask if I missed something useful.  I also don't want to drown the NodeMCU with requests, so it is a balance.
-4) The Indigo Dimmer device, and "Set Brightness" actions control the master WLED brightness.
-5) I have implemented three effect related actions, allowing you to set an effect type, speed and intensity.  Other actions will be added as soon as I can.
-6) My intent was to make the primary RGB settings controllable in the indigo device as well as by action, but it seems more elegant to have the master dimmer mapped to the Indigo Dimmer device. I have added RGB states for the primary and secondary effect colours, but only the primary's update right now (until I figure out the JSON).  Actions will be added to set both colours.
-7) I will add actions over time for the remaining items you can set via the API, I have it largely figured out, it is just time.
-8) I hope the states currently defined should now be stable, and not require deleting and recreating devices (that would mean deleting associated actions etc).  I cannot promise but I have walked through the API and picked the things that could be used.  I also added software version and freeheap in case this helps us identify issues (and elegantly handle new WLED versions)
-I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.  You may see functions (like energy usage) and other that look like they work. but may not.  They are hangovers from the sample plugins, and I may do some things with them, or more likely remove if they make no sense for WLED.  Also I have implemented very little error handling, this will come when I have base functionality done and before I suggest published in the Indigo Store.  I have also requested a sub forum for the WLED plugin on the Indigo forum. 
+4) The Indigo Dimmer device, and "Set Brightness" actions control the master WLED brightness, as well as "Dim by", "Brighten by" and "Toggle" universal actions.
+5) I have implemented the most important of the effect and palette related options, including Effect, Palette, Speed, Itensity and Transition.  I will investigate what if any support for presets and macros makes sense.
+6) The Primary and Secondary RGB colours can be set by two respective actions, and the effects that use them as a base will work the same as via the app.
+7) Please suggest anything else that you think would be useful, I will take a look
+8) The states currently defined should now be stable, and not require re-saving the devices.  I cannot promise but I have walked through the API and picked the things that could be used.  I also added software version and freeheap in case this helps us identify issues (and elegantly handle new WLED versions)
+I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.  You may see functions (like energy usage) and other that look like they work. but may not.  They are hangovers from the sample plugins, and I may do some things with them, or more likely remove if they make no sense for WLED.  Also I have implemented very little error handling, this will come when I have base functionality done and before I suggest publishing in the Indigo Store.  I now also have a sub forum for the WLED plugin on the Indigo forum. 
 
 Cautions:
 
@@ -23,3 +23,4 @@ PLEASE BE AWARE You may need to open and resave the device configuration as I ad
 "Error device "WLED1" state key primarybluevalue not defined (ignoring update request)"
 then opening and resaving the configuration should resolve it.
 
+As this is an Alpha version, I have not had a chance to test as comprehensively as I would like.  By using this version you are joining my virtual testing team, welcome on board and thanks for the help !
