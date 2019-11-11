@@ -441,7 +441,32 @@ class Plugin(indigo.PluginBase):
 
 					# And then tell the Indigo Server to update the state:
 					dev.updateStateOnServer("effectspeed", newSpeed)
+					
+###### SET CROSSFADE ######
+	def setTransition(self, pluginAction, dev):
+				self.debugLog(pluginAction)
+				newTransition = int(pluginAction.props.get("transition"))
+				self.debugLog("New Crossfade is "+str(newTransition))
+				jsondata = json.dumps({ "transition":str(newTransition)})
+				self.debugLog(jsondata)
+				try:
+					transitionresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					self.debugLog(transitionresponse)
+					if wledeffectresponse.status_code == 200:
+    						sendSuccess = True
+					else:
+							sendSuccess = False
+				except:
+					sendSuccess = False
 
+#			sendSuccess = True		# Set to False if it failed.
+
+				if sendSuccess:
+				# If success then log that the command was successfully sent.
+					indigo.server.log(u"sent \"%s\" %s to %s " % (dev.name, "set Crossfade",  newTransition))
+
+					# And then tell the Indigo Server to update the state:
+					dev.updateStateOnServer("transition", newTransition)
 
 	###### SET PALETTE WLED METHOD ######
 	def setEffectPalette(self, pluginAction, dev):

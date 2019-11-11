@@ -37,6 +37,15 @@
 			</Field>
 		</ConfigUI>
 	</Action>
+	<Action id="setTransition" deviceFilter="self">
+		<Name>Set Crossfade Speed</Name>
+		<CallbackMethod>setTransition</CallbackMethod>
+		<ConfigUI>
+			<Field id="transition" type="textfield" defaultValue="255" >
+			<Label>WLED Crossfade Level (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>	
 	<Action id="setPrimaryRGB" deviceFilter="self" >
 		<Name>Set Primary RGB</Name>
 		<CallbackMethod>setPrimaryRGB</CallbackMethod>
