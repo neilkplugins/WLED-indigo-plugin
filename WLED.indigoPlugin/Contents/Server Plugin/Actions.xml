@@ -41,8 +41,9 @@
 		<Name>Set Crossfade Speed</Name>
 		<CallbackMethod>setTransition</CallbackMethod>
 		<ConfigUI>
-			<Field id="transition" type="textfield" defaultValue="255" >
+			<Field id="transition" type="textfield" defaultValue="7" >
 			<Label>WLED Crossfade Level (0-255):</Label>
+			<Label>Each unit is a duration of 100ms  (0-255):</Label>
 			</Field>
 		</ConfigUI>
 	</Action>	

@@ -395,7 +395,7 @@ class Plugin(indigo.PluginBase):
 				self.debugLog(pluginAction)
 				newIntensity = int(pluginAction.props.get("effectintensity"))
 				self.debugLog("New Effect Intensity is "+str(newIntensity))
-				jsondata = json.dumps({ "seg":[{"sx":str(newIntensity)}]})
+				jsondata = json.dumps({ "seg":[{"sx":newIntensity}]})
 				self.debugLog(jsondata)
 				try:
 					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
@@ -421,7 +421,7 @@ class Plugin(indigo.PluginBase):
 				self.debugLog(pluginAction)
 				newSpeed = int(pluginAction.props.get("effectspeed"))
 				self.debugLog("New Effect Speed is "+str(newSpeed))
-				jsondata = json.dumps({ "seg":[{"ix":str(newSpeed)}]})
+				jsondata = json.dumps({ "seg":[{"sx":newSpeed}]})
 				self.debugLog(jsondata)
 				try:
 					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
@@ -447,7 +447,7 @@ class Plugin(indigo.PluginBase):
 				self.debugLog(pluginAction)
 				newTransition = int(pluginAction.props.get("transition"))
 				self.debugLog("New Crossfade is "+str(newTransition))
-				jsondata = json.dumps({ "transition":str(newTransition)})
+				jsondata = json.dumps({ "transition":newTransition})
 				self.debugLog(jsondata)
 				try:
 					transitionresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
