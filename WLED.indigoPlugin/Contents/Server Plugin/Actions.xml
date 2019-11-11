@@ -1,13 +1,5 @@
 <?xml version="1.0"?>
-<!-- By default relay/dimmer type devices will inherit all
-	 class DeviceAction actions, which will be dispatched to
-	 the actionControlDevice() method defined in plugin.py.
-	 
-	 Additional custom actions can also be defined here. The
-	 example below defines a custom action to modify the brightness
-	 of the backlit display of the module, and to modify the custom
-	 backlightBrightness state added to Devices.xml.
--->
+
 <Actions>
 	<Action id="setEffect" deviceFilter="self">
 		<Name>Set Effect Name</Name>
@@ -45,55 +37,31 @@
 			</Field>
 		</ConfigUI>
 	</Action>
-	<Action id="setPrimaryRed" deviceFilter="self">
-		<Name>Set Primary Red Value</Name>
-		<CallbackMethod>setPrimaryRed</CallbackMethod>
+	<Action id="setPrimaryRGB" deviceFilter="self" >
+		<Name>Set Primary RGB</Name>
+		<CallbackMethod>setPrimaryRGB</CallbackMethod>
 		<ConfigUI>
 			<Field id="primaryred" type="textfield" defaultValue="255" >
 			<Label>Primary Red Level Level (0-255):</Label>
 			</Field>
-		</ConfigUI>
-	</Action>
-	<Action id="setPrimaryGreen" deviceFilter="self">
-		<Name>Set Primary Green Value</Name>
-		<CallbackMethod>setPrimaryGreen</CallbackMethod>
-		<ConfigUI>
 			<Field id="primarygreen" type="textfield" defaultValue="255" >
 			<Label>Primary Green Level Level (0-255):</Label>
 			</Field>
-		</ConfigUI>
-	</Action>
-	<Action id="setPrimaryBlue" deviceFilter="self">
-		<Name>Set Primary Blue Value</Name>
-		<CallbackMethod>setPrimaryGreen</CallbackMethod>
-		<ConfigUI>
 			<Field id="primaryblue" type="textfield" defaultValue="255" >
 			<Label>Primary Blue Level Level (0-255):</Label>
 			</Field>
 		</ConfigUI>
 	</Action>
-	<Action id="setSecondaryRed" deviceFilter="self">
-		<Name>Set Primary Red Value</Name>
-		<CallbackMethod>setSecondaryRed</CallbackMethod>
+	<Action id="setSecondaryRGB" deviceFilter="self" >
+		<Name>Set Secondary RGB</Name>
+		<CallbackMethod>setSecondaryRGB</CallbackMethod>
 		<ConfigUI>
 			<Field id="secondaryred" type="textfield" defaultValue="255" >
 			<Label>Secondary Red Level Level (0-255):</Label>
 			</Field>
-		</ConfigUI>
-	</Action>
-	<Action id="setSecondaryGreen" deviceFilter="self">
-		<Name>Set Secondary Green Value</Name>
-		<CallbackMethod>setSecondaryGreen</CallbackMethod>
-		<ConfigUI>
 			<Field id="secondarygreen" type="textfield" defaultValue="255" >
 			<Label>Secondary Green Level Level (0-255):</Label>
 			</Field>
-		</ConfigUI>
-	</Action>
-	<Action id="setSecondaryBlue" deviceFilter="self">
-		<Name>Set Secondary Blue Value</Name>
-		<CallbackMethod>setSecondaryGreen</CallbackMethod>
-		<ConfigUI>
 			<Field id="secondaryblue" type="textfield" defaultValue="255" >
 			<Label>Secondary Blue Level Level (0-255):</Label>
 			</Field>

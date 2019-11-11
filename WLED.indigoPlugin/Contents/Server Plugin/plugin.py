@@ -471,4 +471,61 @@ class Plugin(indigo.PluginBase):
 					# And then tell the Indigo Server to update the state:
 					dev.updateStateOnServer("palette", paletteIndex)
 					dev.updateStateOnServer("palettename", wledpalettes[paletteIndex])
+	
+	####### SET Primary RGB WLED Level Method
+	
+	def setPrimaryRGB(self, pluginAction, dev):
+				self.debugLog(pluginAction)
+				red = pluginAction.props.get("primaryred")
+				green = pluginAction.props.get("primarygreen")
+				blue = pluginAction.props.get("primaryblue")
+				jsondata = json.dumps({"seg":[{"col":[[red, green, blue]]}]})
+				self.debugLog(jsondata)
+				try:
+					rgbresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					self.debugLog(rgbresponse)
+					if rgbresponse.status_code == 200:
+    						sendSuccess = True
+					else:
+							sendSuccess = False
+				except:
+					sendSuccess = False
+
+
+				if sendSuccess:
+				# If success then log that the command was successfully sent.
+					indigo.server.log(u"sent \"%s\" Primary R %s  G %s B %s" % (dev.name, red, green, blue))
+					# And then tell the Indigo Server to update the state:
+					dev.updateStateOnServer("primaryredvalue", int(red))					
+					dev.updateStateOnServer("primarygreenvalue", int(green))
+					dev.updateStateOnServer("primarybluevalue", int(blue))
+					
+	####### SET Secondary RGB WLED Level Method
+	
+	def setSecondaryRGB(self, pluginAction, dev):
+				self.debugLog(pluginAction)
+				red = pluginAction.props.get("secondaryred")
+				green = pluginAction.props.get("secondarygreen")
+				blue = pluginAction.props.get("secondaryblue")
+				jsondata = json.dumps({"seg":[{"col":[[red, green, blue]]}]})
+				self.debugLog(jsondata)
+				try:
+					rgbresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					self.debugLog(rgbresponse)
+					if rgbresponse.status_code == 200:
+    						sendSuccess = True
+					else:
+							sendSuccess = False
+				except:
+					sendSuccess = False
+
+
+				if sendSuccess:
+				# If success then log that the command was successfully sent.
+					indigo.server.log(u"sent \"%s\" Secondary R %s  G %s B %s" % (dev.name, red, green, blue))
+					# And then tell the Indigo Server to update the state:
+					dev.updateStateOnServer("secondaryredvalue", int(red))					
+					dev.updateStateOnServer("secondarygreenvalue", int(green))
+					dev.updateStateOnServer("secondarybluevalue", int(blue))
+
 
