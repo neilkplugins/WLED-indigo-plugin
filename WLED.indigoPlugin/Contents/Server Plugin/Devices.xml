@@ -15,8 +15,8 @@
 				<Description>Shows RGB control and level fields in UI</Description>
 			</Field>
 			<Field type="textfield" id="address" defaultValue="- none -" hidden="true">
-				<Label>Supports RGB:</Label>
-				<Description>Shows RGB control and level fields in UI</Description>
+				<Label>populate ui address field</Label>
+				<Description>duplicate of IP address to show in indigo UI</Description>
 			</Field>						
 		</ConfigUI>
 		<States>
