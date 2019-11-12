@@ -3,14 +3,14 @@
 ####################
 # Copyright (c) 2019 neilk
 # 
-# Based on the sample dimmer plugin
+# Based on a hacked around sample dimmer plugin
 
 ################################################################################
 # Imports
 ################################################################################
 import indigo
 import requests
-#import urllib2
+import urllib2
 import json
 
 ################################################################################
@@ -22,6 +22,13 @@ wledeffects = [u'Solid', u'Blink', u'Breathe', u'Wipe', u'Wipe Random', u'Random
 wledpalettes = [u'Default', u'Random Cycle', u'Primary Color', u'Based on Primary', u'Set Colors', u'Based on Set', u'Party', u'Cloud', u'Lava', u'Ocean', u'Forest', u'Rainbow', u'Rainbow Bands', u'Sunset', u'Rivendell', u'Breeze', u'Red & Blue', u'Yellowout', u'Analogous', u'Splash', u'Pastel', u'Sunset 2', u'Beech', u'Vintage', u'Departure', u'Landscape', u'Beach', u'Sherbet', u'Hult', u'Hult 64', u'Drywet', u'Jul', u'Grintage', u'Rewhi', u'Tertiary', u'Fire', u'Icefire', u'Cyane', u'Light Pink', u'Autumn', u'Magenta', u'Magred', u'Yelmag', u'Yelblu', u'Orange & Teal', u'Tiamat', u'April Night', u'Orangery', u'C9', u'Sakura']
 
 
+
+######################################## Do I need or use this ??
+def updateVar(name, value, folder=0):
+	if name not in indigo.variables:
+		indigo.variable.create(name, value=value, folder=folder)
+	else:
+		indigo.variable.updateValue(name, value)
 
 ################################################################################
 class Plugin(indigo.PluginBase):
@@ -57,8 +64,9 @@ class Plugin(indigo.PluginBase):
 		self.debugLog("Starting concurrent thread")
 		try:
 			while True:
-				# we sleep (by a user defined amount, default 60s) first because when the plugin starts, each device
+				# we sleep (1 minutes) first because when the plugin starts, each device
 				# is updated as they are started.
+				# This will be configurable in a future version, for now just change the number of seconds in the line below
 				self.sleep(1 * int(self.pluginPrefs["pollingFrequency"]) )
 				# now we cycle through each WLED
 				for deviceId in self.deviceList:
@@ -72,24 +80,22 @@ class Plugin(indigo.PluginBase):
 		self.debugLog("Updating device: " + device.name)
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json"
 		try:
-			#f = urllib2.urlopen(theUrl, timeout=1)
-			f = requests.get(theUrl, timeout=1)
-			f.raise_for_status()
-		except requests.exceptions.HTTPError as e:
-			self.errorLog("HTTP error getting WLED %s data: %s" % (device.pluginProps["address"], str(e)))
+			f = urllib2.urlopen(theUrl, timeout=1)
+		except urllib2.HTTPError, e:
+			self.errorLog("HTTP error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
 			return
 		except Exception, e:
-			self.errorLog("Unknown error getting WLED %s data: %s" % (device.pluginProps["address"], str(e)))
+			self.errorLog("Unknown error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
 			return
 		#Get the JSON from the WLED to update device states
-		response = requests.get(theUrl, timeout=1)
-		statusjson = json.loads(response.text)
+		statusjson = json.load(urllib2.urlopen(theUrl,timeout=1))
 		#Un comment below to help diagnose JSON state changes for testing
 		#self.debugLog(statusjson)
 		# parse out the elements which I know is really ugly, I will sort this to do it properly I promise
 		
 		#calculate the UI adjusted brightness to match the UI (0 -100 %) versus 0-255 for device
 		adjustedbrightness = int(round(int(statusjson['state']['bri'])/2.55))
+		
 		#Update Device States
 		# First two may be useful in the future, as WLED will support multiple segments in a single controller
 		device.updateStateOnServer("WLEDversion", statusjson['info']['ver'])
@@ -129,16 +135,10 @@ class Plugin(indigo.PluginBase):
 	def validateDeviceConfigUi(self, valuesDict, typeId, devId):
 		wledIP = valuesDict['ipaddress'].encode('ascii','ignore').upper()
 		valuesDict['ipaddress'] = wledIP
-		valuesDict['address'] = wledIP
 		theUrl = u"http://"+ wledIP+ theUrlBase
-		#try:
-		#	urllib2.urlopen(theUrl,timeout=1)
-		#except urllib2.HTTPError, e:
-		self.debugLog(valuesDict)
 		try:
-			r = requests.get(theUrl, timeout=1)
-			r.raise_for_status()
-		except requests.exceptions.HTTPError as e:
+			urllib2.urlopen(theUrl,timeout=1)
+		except urllib2.HTTPError, e:
 			errorsDict = indigo.Dict()
 			errorsDict['ipaddress'] = "WLED not found or isn't responding"
 			self.errorLog("Error getting WLED data: %s" % wledIP)
