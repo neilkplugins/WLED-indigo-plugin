@@ -10,16 +10,12 @@
 ################################################################################
 import indigo
 import requests
-#import urllib2
 import json
 
 ################################################################################
 # Globals
 ################################################################################
 theUrlBase = u"/json"
-#TODO get these lists by device and build dynamically as potentially future versions will break this and changes to effects will need manual updates, used in the genEffectsList and Effects methods		
-wledeffects = [u'Solid', u'Blink', u'Breathe', u'Wipe', u'Wipe Random', u'Random Colors', u'Sweep', u'Dynamic', u'Colorloop', u'Rainbow', u'Scan', u'Dual Scan', u'Fade', u'Chase', u'Chase Rainbow', u'Running', u'Saw', u'Twinkle', u'Dissolve', u'Dissolve Rnd', u'Sparkle', u'Dark Sparkle', u'Sparkle+', u'Strobe', u'Strobe Rainbow', u'Mega Strobe', u'Blink Rainbow', u'Android', u'Chase', u'Chase Random', u'Chase Rainbow', u'Chase Flash', u'Chase Flash Rnd', u'Rainbow Runner', u'Colorful', u'Traffic Light', u'Sweep Random', u'Running 2', u'Red & Blue', u'Stream', u'Scanner', u'Lighthouse', u'Fireworks', u'Rain', u'Merry Christmas', u'Fire Flicker', u'Gradient', u'Loading', u'In Out', u'In In', u'Out Out', u'Out In', u'Circus', u'Halloween', u'Tri Chase', u'Tri Wipe', u'Tri Fade', u'Lightning', u'ICU', u'Multi Comet', u'Dual Scanner', u'Stream 2', u'Oscillate', u'Pride 2015',u'Juggle', u'Palette', u'Fire 2012', u'Colorwaves', u'BPM', u'Fill Noise', u'Noise 1', u'Noise 2', u'Noise 3', u'Noise 4', u'Colortwinkles', u'Lake', u'Meteor', u'Smooth Meteor', u'Railway', u'Ripple', u'Twinklefox', u'Twinklecat', u'Halloween Eyes']
-wledpalettes = [u'Default', u'Random Cycle', u'Primary Color', u'Based on Primary', u'Set Colors', u'Based on Set', u'Party', u'Cloud', u'Lava', u'Ocean', u'Forest', u'Rainbow', u'Rainbow Bands', u'Sunset', u'Rivendell', u'Breeze', u'Red & Blue', u'Yellowout', u'Analogous', u'Splash', u'Pastel', u'Sunset 2', u'Beech', u'Vintage', u'Departure', u'Landscape', u'Beach', u'Sherbet', u'Hult', u'Hult 64', u'Drywet', u'Jul', u'Grintage', u'Rewhi', u'Tertiary', u'Fire', u'Icefire', u'Cyane', u'Light Pink', u'Autumn', u'Magenta', u'Magred', u'Yelmag', u'Yelblu', u'Orange & Teal', u'Tiamat', u'April Night', u'Orangery', u'C9', u'Sakura']
 
 
 
@@ -72,18 +68,19 @@ class Plugin(indigo.PluginBase):
 		self.debugLog("Updating device: " + device.name)
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json"
 		try:
-			#f = urllib2.urlopen(theUrl, timeout=1)
 			f = requests.get(theUrl, timeout=1)
 			f.raise_for_status()
 		except requests.exceptions.HTTPError as e:
-			self.errorLog("HTTP error getting WLED %s data: %s" % (device.pluginProps["address"], str(e)))
+			self.errorLog("HTTP error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
 			return
 		except Exception, e:
-			self.errorLog("Unknown error getting WLED %s data: %s" % (device.pluginProps["address"], str(e)))
+			self.errorLog("Unknown error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
 			return
 		#Get the JSON from the WLED to update device states
 		response = requests.get(theUrl, timeout=1)
 		statusjson = json.loads(response.text)
+		wledeffects = statusjson['effects']
+		wledpalettes = statusjson['palettes']
 		#Un comment below to help diagnose JSON state changes for testing
 		#self.debugLog(statusjson)
 		# parse out the elements which I know is really ugly, I will sort this to do it properly I promise
@@ -124,7 +121,7 @@ class Plugin(indigo.PluginBase):
 
 
 	########################################
-	# UI Validate, Close, and Actions defined in Actions.xml ###
+	# UI Validate, Close, and Actions defined in Actions.xml:
 	########################################
 	def validateDeviceConfigUi(self, valuesDict, typeId, devId):
 		wledIP = valuesDict['ipaddress'].encode('ascii','ignore').upper()
@@ -351,21 +348,53 @@ class Plugin(indigo.PluginBase):
 			# ** IMPLEMENT ME **
 			indigo.server.log(u"sent \"%s\" %s" % (dev.name, "status request WLED not Implemented"))
 	#####
-	## Create the lists for the action menus, need to make this 		
+	## Create the lists for the action menus, this reads the then current effect list dynamically by device so should survive wled upgrades		
 	
-	def genEffectsList(self, filter="", valuesDict=None, typeId="",targetId=0):
-		#TODO make this really dynamic by looking up by device. shouldn't be an issue if all wleds are on the same version, currently just refers to global variable
-		return  wledeffects
-	
-	def genPaletteList(self, filter="", valuesDict=None, typeId="",targetId=0):
-		#TODO make this really dynamic by looking up by device. shouldn't be an issue if all wleds are on the same version, currently just refers to global variable
-		return  wledpalettes
+	# Create the dynamic list for the effects
+	def genEffectsList(self, filter, valuesDict, typeId, devID):
+		device = indigo.devices[devID]
+		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json/eff"
+		try:
+			effectjson = requests.get(theUrl, timeout=1)
+			effectjson.raise_for_status()
+		except requests.exceptions.HTTPError as e:
+			self.errorLog("HTTP error getting WLED %s effect data: %s" % (device.pluginProps["ipaddress"], str(e)))
+			return
+		except Exception, e:
+			self.errorLog("Unknown error getting WLED effect %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
+			return
+		effectlist = json.loads(effectjson.text)
+		#Update device property so the effect list can be referenced by the set effect method
+		newDevProps = device.pluginProps
+		newDevProps["wledeffects"]= effectlist
+		device.replacePluginPropsOnServer(newDevProps)
+		self.debugLog(effectlist)
+		return  effectlist
+		
+	# Create the dynamic lists for the palettes
+	def genPaletteList(self, filter, valuesDict, typeId, devID):
+		device = indigo.devices[devID]
+		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json/pal"
+		try:
+			palettejson = requests.get(theUrl, timeout=1)
+			palettejson.raise_for_status()
+		except requests.exceptions.HTTPError as e:
+			self.errorLog("HTTP error getting WLED %s palette data: %s" % (device.pluginProps["ipaddress"], str(e)))
+			return
+		except Exception, e:
+			self.errorLog("Unknown error getting WLED palette %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
+			return
+		palettelist = json.loads(palettejson.text)
+		newDevProps = device.pluginProps
+		newDevProps["wledpalettes"]= palettelist
+		device.replacePluginPropsOnServer(newDevProps)
+		return  palettelist
 	
 	###### SET EFFECT WLED METHOD ######
 	def setEffect(self, pluginAction, dev):
 				self.debugLog(pluginAction)
 				newEffect = pluginAction.props.get("effectdescription")
-				effectIndex =wledeffects.index(newEffect)
+				effectIndex =dev.pluginProps["wledeffects"].index(newEffect)
 				self.debugLog("New Effect is "+newEffect+" with index number "+str(effectIndex))
 				jsondata = json.dumps({ "seg":[{"fx":effectIndex}]})
 				self.debugLog(jsondata)
@@ -387,7 +416,7 @@ class Plugin(indigo.PluginBase):
 
 					# And then tell the Indigo Server to update the state:
 					dev.updateStateOnServer("effect", effectIndex)
-					dev.updateStateOnServer("effectname", wledeffects[effectIndex])
+					dev.updateStateOnServer("effectname", dev.pluginProps["wledeffects"][effectIndex])
 
 
 	###### SET EFFECT Intensity WLED METHOD ######
@@ -473,7 +502,7 @@ class Plugin(indigo.PluginBase):
 				self.debugLog(pluginAction)
 				newPalette = pluginAction.props.get("palettedescription")
 				self.debugLog(newPalette)
-				paletteIndex =wledpalettes.index(newPalette)
+				paletteIndex =dev.pluginProps["wledpalettes"].index(newPalette)
 				self.debugLog("New Palette is "+newPalette+" with index number "+str(paletteIndex))
 				jsondata = json.dumps({ "seg":[{"pal":paletteIndex}]})
 				self.debugLog(jsondata)
@@ -491,11 +520,11 @@ class Plugin(indigo.PluginBase):
 
 				if sendSuccess:
 				# If success then log that the command was successfully sent.
-					indigo.server.log(u"sent \"%s\" %s to %d which is %s" % (dev.name, "set effect", paletteIndex, newPalette[0]))
+					indigo.server.log(u"sent \"%s\" %s to %d which is %s" % (dev.name, "set palette", paletteIndex, newPalette))
 
 					# And then tell the Indigo Server to update the state:
 					dev.updateStateOnServer("palette", paletteIndex)
-					dev.updateStateOnServer("palettename", wledpalettes[paletteIndex])
+					dev.updateStateOnServer("palettename", dev.pluginProps["wledpalettes"][paletteIndex])
 	
 	####### SET Primary RGB WLED Level Method
 	
