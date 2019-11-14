@@ -124,7 +124,7 @@ class Plugin(indigo.PluginBase):
 
 
 	########################################
-	# UI Validate, Close, and Actions defined in Actions.xml:
+	# UI Validate, Close, and Actions defined in Actions.xml ###
 	########################################
 	def validateDeviceConfigUi(self, valuesDict, typeId, devId):
 		wledIP = valuesDict['ipaddress'].encode('ascii','ignore').upper()
