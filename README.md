@@ -1,19 +1,19 @@
 # WLED-indigo-plugin
 This Indigo Plugin supports the excellent WLED software from http:://wled.me
 
-This initial version should be considered very much "Alpha", and used only if you don't mind finding issues as you will, and reporting them to me to fix whenever I find time.
+This initial version should be considered very much "Alpha", and used only if you don't mind finding issues, and reporting them to me to fix whenever I find time.
 
 The plugin currently supports :-
 
 1) Creation of Multiple WLED Devices, the only device property is the WLED IP Address and this currently has no validation or error checking
 2) Master Strip/String Power on, and off
-3) WLED States that are reflected in the device are by default currently polled every 60s (this can be configured in the plugin configuration).  I have not mapped everything but it should be simple to add things you need.  I have focussed more on the plugin than WLED functionality at this stage so feel free to ask if I missed something useful.  I also don't want to drown the NodeMCU with requests, so it is a balance.
+3) WLED States that are reflected in the device are by default currently polled every 60s (this can be configured in the plugin configuration).  I have not mapped everything but the things that make sense are done.  I have focussed more on the plugin than WLED functionality at this stage so feel free to ask if I missed something useful.  
 4) The Indigo Dimmer device, and "Set Brightness" actions control the master WLED brightness, as well as "Dim by", "Brighten by" and "Toggle" universal actions.
-5) I have implemented the most important of the effect and palette related options, including Effect, Palette, Speed, Itensity and Transition.  I will investigate what if any support for presets and macros makes sense.
+5) I have implemented the most important of the effect and palette related options, including Effect, Palette, Speed, Itensity and Transition.  I will investigate what if any support for macros makes sense.
 6) The Primary and Secondary RGB colours can be set by two respective actions, and the effects that use them as a base will work the same as via the app.  Presets can also be recalled.
 7) Please suggest anything else that you think would be useful, I will take a look
-8) The states currently defined should now be stable, and not require re-saving the devices.  I cannot promise but I have walked through the API and picked the things that could be used.  I also added software version and freeheap in case this helps us identify issues (and elegantly handle new WLED versions)
-I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.  You may see functions (like energy usage) and other that look like they work. but may not.  They are hangovers from the sample plugins, and I may do some things with them, or more likely remove if they make no sense for WLED.  Also I have implemented very little error handling, this will come when I have base functionality done and before I suggest publishing in the Indigo Store.  I now also have a sub forum for the WLED plugin on the Indigo forum. 
+8) The states currently defined should now be stable, and not require re-saving the device properties between versions.  I cannot promise but I have walked through the API and picked the things that are likely be used.  I also added software version and freeheap in case this helps us identify issues (and elegantly handle new WLED versions)
+I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.   Also I have implemented very little error handling, this will come when I have base functionality done and before I suggest publishing in the Indigo Store.  I now also have a sub forum for the WLED plugin on the Indigo forum. 
 
 Cautions:
 
