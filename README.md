@@ -10,14 +10,14 @@ The plugin currently supports :-
 3) WLED States that are reflected in the device are by default currently polled every 60s (this can be configured in the plugin configuration).  I have not mapped everything but it should be simple to add things you need.  I have focussed more on the plugin than WLED functionality at this stage so feel free to ask if I missed something useful.  I also don't want to drown the NodeMCU with requests, so it is a balance.
 4) The Indigo Dimmer device, and "Set Brightness" actions control the master WLED brightness, as well as "Dim by", "Brighten by" and "Toggle" universal actions.
 5) I have implemented the most important of the effect and palette related options, including Effect, Palette, Speed, Itensity and Transition.  I will investigate what if any support for presets and macros makes sense.
-6) The Primary and Secondary RGB colours can be set by two respective actions, and the effects that use them as a base will work the same as via the app.
+6) The Primary and Secondary RGB colours can be set by two respective actions, and the effects that use them as a base will work the same as via the app.  Presets can also be recalled.
 7) Please suggest anything else that you think would be useful, I will take a look
 8) The states currently defined should now be stable, and not require re-saving the devices.  I cannot promise but I have walked through the API and picked the things that could be used.  I also added software version and freeheap in case this helps us identify issues (and elegantly handle new WLED versions)
 I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.  You may see functions (like energy usage) and other that look like they work. but may not.  They are hangovers from the sample plugins, and I may do some things with them, or more likely remove if they make no sense for WLED.  Also I have implemented very little error handling, this will come when I have base functionality done and before I suggest publishing in the Indigo Store.  I now also have a sub forum for the WLED plugin on the Indigo forum. 
 
 Cautions:
 
-I am not an expert on WLED and the test usage is a single strip. I have not as yet considered any kind of throttling of API requests. We just need to do some more real world testing.  For now I am just relying on polling frequency changes via the overall plugin configuration (Plugins-WLED-Configure)
+I am not an expert on WLED and the test usage is a single strip. I have not as yet considered any kind of throttling of API requests. We just need to do some more real world testing.  For now I am just relying on polling frequency changes via the overall plugin configuration (Plugins-WLED-Configure) and timeout configuration for the JSON API requests. I notice the timeout period may need to increase if the WLED throws errors in the Indigo log.
 
 PLEASE BE AWARE You may need to open and resave the device configuration as I add additional states, this will also impact actions, schedules that reference the device.  Do this if you get an error like
 "Error device "WLED1" state key primarybluevalue not defined (ignoring update request)"
