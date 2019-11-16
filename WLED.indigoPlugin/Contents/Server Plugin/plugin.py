@@ -68,16 +68,17 @@ class Plugin(indigo.PluginBase):
 		self.debugLog("Updating device: " + device.name)
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json"
 		try:
-			f = requests.get(theUrl, timeout=1)
-			f.raise_for_status()
+			response = requests.get(theUrl, timeout=float(self.pluginPrefs["requeststimeout"]))
+			response.raise_for_status()
 		except requests.exceptions.HTTPError as e:
-			self.errorLog("HTTP error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
+			self.errorLog("HTTP error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
+			device.setErrorStateOnServer('Not Responding')
 			return
 		except Exception, e:
-			self.errorLog("Unknown error getting WLED %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
+			self.errorLog("Unknown error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
+			device.setErrorStateOnServer('Not Responding')
 			return
 		#Get the JSON from the WLED to update device states
-		response = requests.get(theUrl, timeout=1)
 		statusjson = json.loads(response.text)
 		wledeffects = statusjson['effects']
 		wledpalettes = statusjson['palettes']
@@ -163,7 +164,7 @@ class Plugin(indigo.PluginBase):
 		if action.deviceAction == indigo.kDeviceAction.TurnOn:
 			jsondata = json.dumps({ "on": True})
 			try:
-				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 				if wledonresponse.status_code == 200:
     					sendSuccess = True
 				else:
@@ -186,7 +187,7 @@ class Plugin(indigo.PluginBase):
 			# Turn WLED off
 			jsondata = json.dumps({ "on": False})
 			try:
-				wledoffresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+				wledoffresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 				if wledoffresponse.status_code == 200:
     					sendSuccess = True
 				else:
@@ -211,7 +212,7 @@ class Plugin(indigo.PluginBase):
 			newOnState = not dev.onState
 			jsondata = json.dumps({ "on": newOnState})
 			try:
-				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 				if wledonresponse.status_code == 200:
     					sendSuccess = True
 				else:
@@ -241,7 +242,7 @@ class Plugin(indigo.PluginBase):
 			self.debugLog(type(adjustedbrightness))
 			jsondata = json.dumps({ "bri": adjustedbrightness})
 			try:
-				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 				if wledonresponse.status_code == 200:
     					sendSuccess = True
 				else:
@@ -274,7 +275,7 @@ class Plugin(indigo.PluginBase):
 			adjustedbrightness =int(newBrightness * 2.55)
 			jsondata = json.dumps({ "bri": adjustedbrightness})
 			try:
-				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 				if wledonresponse.status_code == 200:
     					sendSuccess = True
 				else:
@@ -303,7 +304,7 @@ class Plugin(indigo.PluginBase):
 			adjustedbrightness =int(newBrightness * 2.55)
 			jsondata = json.dumps({ "bri": adjustedbrightness})
 			try:
-				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+				wledonresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 				if wledonresponse.status_code == 200:
     					sendSuccess = True
 				else:
@@ -355,7 +356,7 @@ class Plugin(indigo.PluginBase):
 		device = indigo.devices[devID]
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json/eff"
 		try:
-			effectjson = requests.get(theUrl, timeout=1)
+			effectjson = requests.get(theUrl, timeout=float(self.pluginPrefs["requeststimeout"]))
 			effectjson.raise_for_status()
 		except requests.exceptions.HTTPError as e:
 			self.errorLog("HTTP error getting WLED %s effect data: %s" % (device.pluginProps["ipaddress"], str(e)))
@@ -376,7 +377,7 @@ class Plugin(indigo.PluginBase):
 		device = indigo.devices[devID]
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json/pal"
 		try:
-			palettejson = requests.get(theUrl, timeout=1)
+			palettejson = requests.get(theUrl, timeout=float(self.pluginPrefs["requeststimeout"]))
 			palettejson.raise_for_status()
 		except requests.exceptions.HTTPError as e:
 			self.errorLog("HTTP error getting WLED %s palette data: %s" % (device.pluginProps["ipaddress"], str(e)))
@@ -399,7 +400,7 @@ class Plugin(indigo.PluginBase):
 				jsondata = json.dumps({ "seg":[{"fx":effectIndex}]})
 				self.debugLog(jsondata)
 				try:
-					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(wledeffectresponse)
 					if wledeffectresponse.status_code == 200:
     						sendSuccess = True
@@ -427,7 +428,7 @@ class Plugin(indigo.PluginBase):
 				jsondata = json.dumps({ "seg":[{"sx":newIntensity}]})
 				self.debugLog(jsondata)
 				try:
-					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(wledeffectresponse)
 					if wledeffectresponse.status_code == 200:
     						sendSuccess = True
@@ -453,7 +454,7 @@ class Plugin(indigo.PluginBase):
 				jsondata = json.dumps({ "seg":[{"sx":newSpeed}]})
 				self.debugLog(jsondata)
 				try:
-					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(wledeffectresponse)
 					if wledeffectresponse.status_code == 200:
     						sendSuccess = True
@@ -479,9 +480,9 @@ class Plugin(indigo.PluginBase):
 				jsondata = json.dumps({ "transition":newTransition})
 				self.debugLog(jsondata)
 				try:
-					transitionresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					transitionresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(transitionresponse)
-					if wledeffectresponse.status_code == 200:
+					if transitionresponse.status_code == 200:
     						sendSuccess = True
 					else:
 							sendSuccess = False
@@ -507,7 +508,7 @@ class Plugin(indigo.PluginBase):
 				jsondata = json.dumps({ "seg":[{"pal":paletteIndex}]})
 				self.debugLog(jsondata)
 				try:
-					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					wledeffectresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(wledeffectresponse)
 					if wledeffectresponse.status_code == 200:
     						sendSuccess = True
@@ -536,7 +537,7 @@ class Plugin(indigo.PluginBase):
 				jsondata = json.dumps({"seg":[{"col":[[red, green, blue]]}]})
 				self.debugLog(jsondata)
 				try:
-					rgbresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					rgbresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(rgbresponse)
 					if rgbresponse.status_code == 200:
     						sendSuccess = True
@@ -564,7 +565,7 @@ class Plugin(indigo.PluginBase):
 				jsondata = json.dumps({"seg":[{"col":[[red, green, blue]]}]})
 				self.debugLog(jsondata)
 				try:
-					rgbresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=1)
+					rgbresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(rgbresponse)
 					if rgbresponse.status_code == 200:
     						sendSuccess = True
@@ -573,6 +574,31 @@ class Plugin(indigo.PluginBase):
 				except:
 					sendSuccess = False
 
+###### SET PRESET ######
+	def setPreset(self, pluginAction, dev):
+				self.debugLog(pluginAction)
+				newPreset = int(pluginAction.props.get("preset"))
+				self.debugLog("New Preset is "+str(newPreset))
+				jsondata = json.dumps({ "ps":newPreset})
+				self.debugLog(jsondata)
+				try:
+					presetresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
+					self.debugLog(presetresponse)
+					if wledeffectresponse.status_code == 200:
+    						sendSuccess = True
+					else:
+							sendSuccess = False
+				except:
+					sendSuccess = False
+
+#			sendSuccess = True		# Set to False if it failed.
+
+				if sendSuccess:
+				# If success then log that the command was successfully sent.
+					indigo.server.log(u"sent \"%s\" %s to %s " % (dev.name, "set Preset",  newPreset))
+
+					# And then tell the Indigo Server to update the state:
+					dev.updateStateOnServer("preset", newPreset)
 
 				if sendSuccess:
 				# If success then log that the command was successfully sent.

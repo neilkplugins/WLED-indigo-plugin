@@ -10,10 +10,16 @@
 	<Field id="simpleseparator" type="separator">
 	</Field>
 	<Field id="midLabel" type="label" fontSize="small" fontColor="darkgray">
-		<Label>More frequent impacts the load on the MCU but increases state update responsivness. Use with caution.</Label>
+		<Label>More frequent impacts the load on the MCU but increases state update responsiveness. Use with caution.</Label>
 	</Field>
 	<Field id="pollingFrequency" type="textfield" defaultValue="60">
 	<Label>Enter Polling Frequency in Seconds:</Label>
+	</Field>
+	<Field id="midLabel2" type="label" fontSize="small" fontColor="darkgray">
+	<Label>WLED Devices can become less responsive under load (lots of LEDS etc), increase if you see timeout errors</Label>
+	</Field>
+<Field id="requeststimeout" type="textfield" defaultValue="1">
+	<Label>Enter timeout (seconds) for requests to the WLED API:</Label>
 	</Field>
 </PluginConfig>
  

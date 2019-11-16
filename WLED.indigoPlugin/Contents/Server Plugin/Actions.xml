@@ -77,4 +77,14 @@
 			</Field>
 		</ConfigUI>
 	</Action>
+	<Action id="setPreset" deviceFilter="self">
+		<Name>Recall Preset</Name>
+		<CallbackMethod>setPreset</CallbackMethod>
+		<ConfigUI>
+			<Field id="preset" type="textfield" defaultValue="0" >
+			<Label>Select Preset (-1 to 65535):</Label>
+			<Label>Each unit is a duration of 100ms  (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
 </Actions>
