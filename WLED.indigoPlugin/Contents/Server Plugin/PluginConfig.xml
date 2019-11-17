@@ -10,7 +10,7 @@
 	<Field id="simpleseparator" type="separator">
 	</Field>
 	<Field id="midLabel" type="label" fontSize="small" fontColor="darkgray">
-		<Label>More frequent impacts the load on the MCU but increases state update responsiveness. Use with caution.</Label>
+		<Label>More frequent impacts the load on the NodeMCU but increases state update responsiveness. Use with caution.</Label>
 	</Field>
 	<Field id="pollingFrequency" type="textfield" defaultValue="60">
 	<Label>Enter Polling Frequency in Seconds:</Label>
@@ -20,6 +20,11 @@
 	</Field>
 <Field id="requeststimeout" type="textfield" defaultValue="1">
 	<Label>Enter timeout (seconds) for requests to the WLED API:</Label>
+	</Field>
+	<Field id="simpleseparator2" type="separator">
+	</Field>
+	<Field id="midLabel3" type="label" fontSize="small" fontColor="darkgray">
+	<Label>Restart Plugin in order to make changes here take effect</Label>
 	</Field>
 </PluginConfig>
  

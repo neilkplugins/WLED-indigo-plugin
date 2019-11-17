@@ -17,6 +17,21 @@ import json
 ################################################################################
 theUrlBase = u"/json"
 
+########################################
+# Function to validate IP address
+########################################
+def validate_ipaddress(ipstring):
+    a = ipstring.split('.')
+    if len(a) != 4:
+        return False
+    for x in a:
+        if not x.isdigit():
+            return False
+        i = int(x)
+        if i < 0 or i > 255:
+            return False
+    return True
+
 
 
 ################################################################################
@@ -51,24 +66,26 @@ class Plugin(indigo.PluginBase):
 	########################################
 	def runConcurrentThread(self):
 		self.debugLog("Starting concurrent thread")
+		pollingFreq = int(self.pluginPrefs['pollingFrequency'])
 		try:
 			while True:
 				# we sleep (by a user defined amount, default 60s) first because when the plugin starts, each device
 				# is updated as they are started.
-				self.sleep(1 * int(self.pluginPrefs["pollingFrequency"]) )
+				self.sleep(1 * pollingFreq )
 				# now we cycle through each WLED
 				for deviceId in self.deviceList:
 					# call the update method with the device instance
 					self.update(indigo.devices[deviceId])
 		except self.StopThread:
-			pass
+				pass
 
 	########################################
 	def update(self,device):
 		self.debugLog("Updating device: " + device.name)
+		requestsTimeOut = float(self.pluginPrefs.get('requeststimeout'))
 		theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json"
 		try:
-			response = requests.get(theUrl, timeout=float(self.pluginPrefs["requeststimeout"]))
+			response = requests.get(theUrl, timeout=requestsTimeOut)
 			response.raise_for_status()
 		except requests.exceptions.HTTPError as e:
 			self.errorLog("HTTP error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
@@ -117,22 +134,23 @@ class Plugin(indigo.PluginBase):
 		device.updateStateOnServer("secondarygreenvalue", statusjson['state']['seg'][0]['col'][1][1])	
 
 
-		
-		
-
-
 	########################################
 	# UI Validate, Close, and Actions defined in Actions.xml:
 	########################################
 	def validateDeviceConfigUi(self, valuesDict, typeId, devId):
-		wledIP = valuesDict['ipaddress'].encode('ascii','ignore').upper()
+		if not(validate_ipaddress(valuesDict['ipaddress'])):
+			errorsDict = indigo.Dict()
+			errorsDict['ipaddress'] = "Incorrectly formed or invalid IP address"
+			self.errorLog("Incorrectly formed or invalid IP address")
+			return (False, valuesDict, errorsDict)
+		
+	
+		wledIP = valuesDict['ipaddress']
 		valuesDict['ipaddress'] = wledIP
 		valuesDict['address'] = wledIP
 		theUrl = u"http://"+ wledIP+ theUrlBase
-		#try:
-		#	urllib2.urlopen(theUrl,timeout=1)
-		#except urllib2.HTTPError, e:
-		self.debugLog(valuesDict)
+		
+		
 		try:
 			r = requests.get(theUrl, timeout=1)
 			r.raise_for_status()
@@ -141,9 +159,210 @@ class Plugin(indigo.PluginBase):
 			errorsDict['ipaddress'] = "WLED not found or isn't responding"
 			self.errorLog("Error getting WLED data: %s" % wledIP)
 			return (False, valuesDict, errorsDict)
+		except Exception, e:
+			errorsDict = indigo.Dict()
+			errorsDict['ipaddress'] = "Unknown error connecting to WLED"
+			self.errorLog("Unknown Error getting WLED data: %s Check IP address" % wledIP)
+			return (False, valuesDict, errorsDict)
 
 		return (True, valuesDict)
+		
+		
+	########################################
+	# UI Validate, Plugin Preferences
+	########################################
+	def validatePrefsConfigUi(self, valuesDict):
+		try:
+			timeoutint=float(valuesDict['requeststimeout'])
+		except:
+			self.errorLog("Invalid entry for  WLED Plugin Config API Timeout - must be a number")
+			errorsDict = indigo.Dict() 
+			errorsDict['requeststimeout'] = "Invalid entry for  WLED Plugin Config API Timeout - must be a number"
+			return (False, valuesDict, errorsDict)
+		try:
+			pollingfreq=int(valuesDict['pollingFrequency'])
+		except:
+			self.errorLog("Invalid entry for WLED Plugin Config Polling Frequency - must be a whole number greater than 0")
+			errorsDict = indigo.Dict() 
+			errorsDict['pollingFrequency'] = "Invalid entry for WLED Plugin Config Polling Frequency - must be a whole number greater than 0"
+			return (False, valuesDict, errorsDict)
+		
+		if int(valuesDict['pollingFrequency']) == 0:
+			self.errorLog("Invalid entry for WLED Plugin Config Polling Frequency - must be greater than 0")
+			errorsDict = indigo.Dict() 
+			errorsDict['pollingFrequency'] = "Invalid entry for WLED Plugin Config Polling Frequency - must be a whole number greater than 0"
+			return (False, valuesDict, errorsDict)
+		if int(valuesDict['requeststimeout']) == 0:
+			self.errorLog("Invalid entry for WLED Plugin Config Requests Timeout - must be greater than 0")
+			errorsDict = indigo.Dict() 
+			errorsDict['requeststimeout'] = "Invalid entry for WLED Plugin Config Requests Timeout - must be greater than 0"
+			return (False, valuesDict, errorsDict)
+			
+		#Otherwise we are good
+		return (True, valuesDict)
+		
+	########################################
+	# UI Validate, Actions
+	########################################
+	def validateActionConfigUi(self, valuesDict, typeId, deviceId):
+		self.debugLog(valuesDict)
+		# Validate Intensity
+		if 'effectintensity' in valuesDict:
+			try:
+				effectintensity=int(valuesDict['effectintensity'])
+			except:
+				self.errorLog("Invalid entry for Effect Intensity - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['effectintensity'] = "Invalid entry for Effect Intensity - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['effectintensity']))
+			if  not(int(valuesDict['effectintensity']) in xrange(0,256)):
 
+			#if 0 <= int(valuesDict['effectintensity']) >= 256:
+				self.errorLog("Invalid entry for Effect Intensity - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['effectintensity'] = "Invalid entry for Effect Intensity - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+		#Validate Effect Speed
+		if 'effectspeed' in valuesDict:
+			try:
+				effectspeed=int(valuesDict['effectspeed'])
+			except:
+				self.errorLog("Invalid entry for Effect Speed - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['effectspeed'] = "Invalid entry for Effect Speed - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['effectspeed']))
+			if not(int(valuesDict['effectspeed']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Effect Speed - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['effectspeed'] = "Invalid entry for Effect Speed - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			#Validate Transition
+		if 'transition' in valuesDict:
+			try:
+				transition=int(valuesDict['transition'])
+			except:
+				self.errorLog("Invalid entry for Crossfade - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['transition'] = "Invalid entry for Crossfade - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['transition']))
+			if not(int(valuesDict['transition']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Crossfade - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['transition'] = "Invalid entry for Crossfade - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+					
+		if 'preset' in valuesDict:
+			try:
+				preset=int(valuesDict['preset'])
+			except:
+				self.errorLog("Invalid entry for Preset - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['transition'] = "Invalid entry for Preset - must be a whole number between -1 and 65535"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['preset']))
+			if not(int(valuesDict['preset']) in xrange(-1,65536)):
+				self.errorLog("Invalid entry for Preset - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['preset'] = "Invalid entry for Preset - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+				
+		if 'primaryblue' in valuesDict:
+			try:
+				primaryblue=int(valuesDict['primaryblue'])
+			except:
+				self.errorLog("Invalid entry for Colour - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['primaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['primaryblue']))
+			if not(int(valuesDict['primaryblue']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['primaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			
+		if 'primaryred' in valuesDict:
+			try:
+				primaryred=int(valuesDict['primaryred'])
+			except:
+				self.errorLog("Invalid entry for Colour - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['primaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['primaryred']))
+			if not(int(valuesDict['primaryred']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['primaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)	
+
+		if 'primarygreen' in valuesDict:
+			try:
+				primarygreen=int(valuesDict['primarygreen'])
+			except:
+				self.errorLog("Invalid entry for Colour - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['primarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['primarygreen']))
+			if not(int(valuesDict['primarygreen']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['primarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)	
+				
+		if 'secondaryblue' in valuesDict:
+			try:
+				secondaryblue=int(valuesDict['secondaryblue'])
+			except:
+				self.errorLog("Invalid entry for Colour - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['secondaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['secondaryblue']))
+			if not(int(valuesDict['secondaryblue']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['secondaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			
+		if 'secondaryred' in valuesDict:
+			try:
+				secondaryred=int(valuesDict['secondaryred'])
+			except:
+				self.errorLog("Invalid entry for Colour - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['secondaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['secondaryred']))
+			if not(int(valuesDict['secondaryred']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['secondaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)	
+
+		if 'secondarygreen' in valuesDict:
+			try:
+				secondarygreen=int(valuesDict['secondarygreen'])
+			except:
+				self.errorLog("Invalid entry for Colour - must be a whole number between 0 and 255")
+				errorsDict = indigo.Dict() 
+				errorsDict['secondarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)
+			self.debugLog(int(valuesDict['secondarygreen']))
+			if not(int(valuesDict['secondarygreen']) in xrange(0,256)):
+				self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
+				errorsDict = indigo.Dict() 
+				errorsDict['secondarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
+				return (False, valuesDict, errorsDict)	
+								
+		#Otherwise we are all good	
+		return (True, valuesDict)
+			
+		
 	########################################
 	# Menu Methods
 	########################################
@@ -156,7 +375,7 @@ class Plugin(indigo.PluginBase):
 			self.pluginPrefs["showDebugInfo"] = True
 		self.debug = not self.debug
 		
-########################################
+	########################################
 	# Relay / Dimmer Action callback
 	######################
 	def actionControlDevice(self, action, dev):
@@ -600,12 +819,5 @@ class Plugin(indigo.PluginBase):
 					# And then tell the Indigo Server to update the state:
 					dev.updateStateOnServer("preset", newPreset)
 
-				if sendSuccess:
-				# If success then log that the command was successfully sent.
-					indigo.server.log(u"sent \"%s\" Secondary R %s  G %s B %s" % (dev.name, red, green, blue))
-					# And then tell the Indigo Server to update the state:
-					dev.updateStateOnServer("secondaryredvalue", int(red))					
-					dev.updateStateOnServer("secondarygreenvalue", int(green))
-					dev.updateStateOnServer("secondarybluevalue", int(blue))
-
+				
 
