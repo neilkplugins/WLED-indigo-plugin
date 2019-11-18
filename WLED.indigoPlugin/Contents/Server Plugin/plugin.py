@@ -803,7 +803,7 @@ class Plugin(indigo.PluginBase):
 				try:
 					presetresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
 					self.debugLog(presetresponse)
-					if wledeffectresponse.status_code == 200:
+					if presetresponse.status_code == 200:
     						sendSuccess = True
 					else:
 							sendSuccess = False
