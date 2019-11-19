@@ -19,12 +19,48 @@
 			</Field>
 		</ConfigUI>
 	</Action>
+	<Action id="increaseEffectIntensity" deviceFilter="self">
+		<Name>Increase Effect Intensity by %</Name>
+		<CallbackMethod>increaseEffectIntensity</CallbackMethod>
+		<ConfigUI>
+			<Field id="increaseeffectintensity" type="textfield" defaultValue="5" >
+			<Label>Increase WLED effect intensity by % (1-100):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="decreaseEffectIntensity" deviceFilter="self">
+		<Name>Decrease Effect Intensity by %</Name>
+		<CallbackMethod>decreaseEffectIntensity</CallbackMethod>
+		<ConfigUI>
+			<Field id="decreaseeffectintensity" type="textfield" defaultValue="5" >
+			<Label>Decrease WLED effect intensity by % (1-100):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
 	<Action id="setEffectSpeed" deviceFilter="self">
 		<Name>Set Effect Speed</Name>
 		<CallbackMethod>setEffectSpeed</CallbackMethod>
 		<ConfigUI>
 			<Field id="effectspeed" type="textfield" defaultValue="255" >
 			<Label>WLED Effect Speed Level (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="increaseEffectSpeed" deviceFilter="self">
+		<Name>Increase Effect Speed by %</Name>
+		<CallbackMethod>increaseEffectSpeed</CallbackMethod>
+		<ConfigUI>
+			<Field id="increaseeffectspeed" type="textfield" defaultValue="5" >
+			<Label>Increase WLED effect intensity by % (1-100):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="decreaseEffectSpeed" deviceFilter="self">
+		<Name>Decrease Effect Speed by %</Name>
+		<CallbackMethod>decreaseEffectSpeed</CallbackMethod>
+		<ConfigUI>
+			<Field id="decreaseeffectspeed" type="textfield" defaultValue="5" >
+			<Label>Decrease WLED effect intensity by % (1-100):</Label>
 			</Field>
 		</ConfigUI>
 	</Action>
@@ -46,7 +82,7 @@
 			<Label>Each unit is a duration of 100ms  (0-255):</Label>
 			</Field>
 		</ConfigUI>
-	</Action>	
+	</Action>
 	<Action id="setPrimaryRGB" deviceFilter="self" >
 		<Name>Set Primary RGB</Name>
 		<CallbackMethod>setPrimaryRGB</CallbackMethod>
