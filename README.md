@@ -15,9 +15,9 @@ The plugin currently supports :-
 8) The states currently defined are now be stable, and not require re-saving the device properties between versions.    I also added software version and freeheap in case this helps us identify issues (and elegantly handle new WLED versions)
 I have had limited opportunity to test, nothing should cause any issues however it is possible I have missed some really basic functionality and not caught the omission, so try at this stage at your own risk.   All configuration options in the plugin have full validation, this does require testing before promotion to the plugin store.  I now also have a sub forum for the WLED plugin on the Indigo forum. 
 
-Cautions:
+# Cautions:
 
 I am not an expert on WLED and the test usage is a single strip. I have not as yet considered any kind of throttling of API requests. We just need to do some more real world testing.  For now I am just relying on polling frequency changes via the overall plugin configuration (Plugins-WLED-Configure) and timeout configuration for the JSON API requests. I notice the timeout period may need to increase if the WLED throws errors in the Indigo log.
 
 
-As this is a Beta version, I have not had a chance to test as comprehensively as I would like.  By using this version you are joining my virtual testing team, welcome on board and thanks for the help !
+As this is a Beta version (or maybe v1.0 in the store soon), I have not had a chance to test as comprehensively as I would like.  By using this version you are joining my virtual testing team, welcome on board and thanks for the help !
