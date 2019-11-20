@@ -34,9 +34,7 @@ As this is the first version of my first plugin, so usage is at your own risk ! 
 
 ### Thanks
 
-Thanks for the inspiration and support from the Indigo Community, I would not have been able to complete this without the help I received.
-7) Please suggest anything else that you think would be useful, I will take a look
-8) You can submit support requests, feature requests, feedback or anything else to the plugin forum  https://forums.indigodomo.com/viewforum.php?f=319
+Thanks for the inspiration and support from the Indigo Community, I would not have been able to complete this without the help I received. You can submit support requests, feature requests, feedback or anything else to the plugin forum  https://forums.indigodomo.com/viewforum.php?f=319
 
 # Cautions:
 
