@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<Devices>
+	<!-- Define some devices -->
+	<Device type="dimmer" id="wledip">
+		<Name>WLED IP Controller</Name>
+		<ConfigUI>
+			<Field id="ipaddress" type="textfield">
+				<Label>Enter WLED IP Address:</Label>
+			</Field>
+			<Field id="label" type="label" fontSize="small" fontColor="darkgray">
+				<Label>Enter the IP Address of the WLED controller</Label>
+			</Field>
+			<Field type="checkbox" id="supportsRGB" defaultValue="true" hidden="true">
+				<Label>Supports RGB:</Label>
+				<Description>Shows RGB control and level fields in UI</Description>
+			</Field>
+			<Field type="textfield" id="address" defaultValue="- none -" hidden="true">
+				<Label>populate ui address field</Label>
+				<Description>duplicate of IP address to show in indigo UI</Description>
+			</Field>						
+		</ConfigUI>
+		<States>
+			<State id="WLEDversion" defaultValue="Unknown">
+				<ValueType>String</ValueType>
+				<TriggerLabel>WLED Software Version Change</TriggerLabel>
+				<ControlPageLabel>WLED Software Version</ControlPageLabel>
+			</State>
+			<State id="WLEDfreeheap">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>WLED Memory Usage Change</TriggerLabel>
+				<ControlPageLabel>WLED Memory Usage</ControlPageLabel>
+				</State>
+			<State id="brightness">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Brightness Change</TriggerLabel>
+				<ControlPageLabel>Master Brightness</ControlPageLabel>
+			</State>
+			<State id="transition">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Transition Change</TriggerLabel>
+				<ControlPageLabel>Duration of the crossfade between different colors/brightness levels.</ControlPageLabel>
+			</State>
+			<State id="preset">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Preset Change</TriggerLabel>
+				<ControlPageLabel>Current Preset ID</ControlPageLabel>
+			</State>
+			<State id="playlist">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Playlist Change</TriggerLabel>
+				<ControlPageLabel>Playlist Change</ControlPageLabel>
+			</State>
+			<State id="nightlight">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Night Light State Change</TriggerLabel>
+				<ControlPageLabel>Night Light State</ControlPageLabel>
+				</State>
+				<State id="nightlightduration">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Night Light Time Change</TriggerLabel>
+				<ControlPageLabel>Night Light Duration</ControlPageLabel>
+			</State>
+			<State id="nightlightfade">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Night Light Fade Change</TriggerLabel>
+				<ControlPageLabel>Night Light Fade</ControlPageLabel>
+			</State>
+			<State id="nightlightbrightness">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Night Light Brightness Change</TriggerLabel>
+				<ControlPageLabel>Night Light Brightness</ControlPageLabel>
+			</State>
+			<State id="effect">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Effect Identifier Change</TriggerLabel>
+				<ControlPageLabel>Effect Identifier</ControlPageLabel>
+				</State>
+				<State id="effectname" defaultValue="Unknowm">
+				<ValueType>String</ValueType>
+				<TriggerLabel>Effect Name Change</TriggerLabel>
+				<ControlPageLabel>Effect Name</ControlPageLabel>
+				</State>
+				<State id="effectspeed">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Effect Speed Change</TriggerLabel>
+				<ControlPageLabel>Effect Speed</ControlPageLabel>
+			</State>
+				<State id="effectintensity">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Effect Intensity Change</TriggerLabel>
+				<ControlPageLabel>Effect Intensity</ControlPageLabel>
+				</State>
+				<State id="palette">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Colour Palette ID Change</TriggerLabel>
+				<ControlPageLabel>Colour Palette</ControlPageLabel>
+			</State>
+				<State id="palettename" defaultValue="Unknow">
+				<ValueType>String</ValueType>
+				<TriggerLabel>Colour Palette ID Name Change</TriggerLabel>
+				<ControlPageLabel>Colour Palette Name</ControlPageLabel>
+			</State>
+				<State id="primaryredvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Primary Red Value Change</TriggerLabel>
+				<ControlPageLabel>Primary Red Value</ControlPageLabel>
+			</State>
+				<State id="primarygreenvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Primary Green Value Change</TriggerLabel>
+				<ControlPageLabel>Primary Green Value</ControlPageLabel>
+			</State>
+				<State id="primarybluevalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Primary Blue Value Change</TriggerLabel>
+				<ControlPageLabel>Primary Blue Value</ControlPageLabel></State>
+				<State id="secondaryredvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Secondary Red Value Change</TriggerLabel>
+				<ControlPageLabel>Secondary Red Value</ControlPageLabel>
+			</State>
+				<State id="secondarygreenvalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Secondary Green Value Change</TriggerLabel>
+				<ControlPageLabel>Secondary Green Value</ControlPageLabel>
+			</State>
+				<State id="secondarybluevalue">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Secondary Blue Value Change</TriggerLabel>
+				<ControlPageLabel>Secondary Blue Value</ControlPageLabel>
+			</State>
+				<State id="segment">
+				<ValueType>Number</ValueType>
+				<TriggerLabel>Segment Number</TriggerLabel>
+				<ControlPageLabel>Segment Number</ControlPageLabel>
+			</State>
+		</States>
+	</Device>
+</Devices>

@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+
+<Actions>
+	<Action id="setEffect" deviceFilter="self">
+		<Name>Set Effect Name</Name>
+		<CallbackMethod>setEffect</CallbackMethod>
+		<ConfigUI>
+			<Field id="effectdescription" type="menu" >
+			<List class="self" method="genEffectsList"/>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setEffectIntensity" deviceFilter="self">
+		<Name>Set Effect Intensity</Name>
+		<CallbackMethod>setEffectIntensity</CallbackMethod>
+		<ConfigUI>
+			<Field id="effectintensity" type="textfield" defaultValue="255" >
+			<Label>WLED Effect Intensity Level (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="increaseEffectIntensity" deviceFilter="self">
+		<Name>Increase Effect Intensity by %</Name>
+		<CallbackMethod>increaseEffectIntensity</CallbackMethod>
+		<ConfigUI>
+			<Field id="increaseeffectintensity" type="textfield" defaultValue="5" >
+			<Label>Increase WLED effect intensity by % (1-100):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="decreaseEffectIntensity" deviceFilter="self">
+		<Name>Decrease Effect Intensity by %</Name>
+		<CallbackMethod>decreaseEffectIntensity</CallbackMethod>
+		<ConfigUI>
+			<Field id="decreaseeffectintensity" type="textfield" defaultValue="5" >
+			<Label>Decrease WLED effect intensity by % (1-100):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setEffectSpeed" deviceFilter="self">
+		<Name>Set Effect Speed</Name>
+		<CallbackMethod>setEffectSpeed</CallbackMethod>
+		<ConfigUI>
+			<Field id="effectspeed" type="textfield" defaultValue="255" >
+			<Label>WLED Effect Speed Level (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="increaseEffectSpeed" deviceFilter="self">
+		<Name>Increase Effect Speed by %</Name>
+		<CallbackMethod>increaseEffectSpeed</CallbackMethod>
+		<ConfigUI>
+			<Field id="increaseeffectspeed" type="textfield" defaultValue="5" >
+			<Label>Increase WLED effect intensity by % (1-100):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="decreaseEffectSpeed" deviceFilter="self">
+		<Name>Decrease Effect Speed by %</Name>
+		<CallbackMethod>decreaseEffectSpeed</CallbackMethod>
+		<ConfigUI>
+			<Field id="decreaseeffectspeed" type="textfield" defaultValue="5" >
+			<Label>Decrease WLED effect intensity by % (1-100):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setEffectPalette" deviceFilter="self">
+		<Name>Set Effect Palette</Name>
+		<CallbackMethod>setEffectPalette</CallbackMethod>
+		<ConfigUI>
+			<Field id="palettedescription" type="menu" >
+			<List class="self" method="genPaletteList"/>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setTransition" deviceFilter="self">
+		<Name>Set Crossfade Speed</Name>
+		<CallbackMethod>setTransition</CallbackMethod>
+		<ConfigUI>
+			<Field id="transition" type="textfield" defaultValue="7" >
+			<Label>WLED Crossfade Level (0-255):</Label>
+			<Label>Each unit is a duration of 100ms  (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setPrimaryRGB" deviceFilter="self" >
+		<Name>Set Primary RGB</Name>
+		<CallbackMethod>setPrimaryRGB</CallbackMethod>
+		<ConfigUI>
+			<Field id="primaryred" type="textfield" defaultValue="255" >
+			<Label>Primary Red Level Level (0-255):</Label>
+			</Field>
+			<Field id="primarygreen" type="textfield" defaultValue="255" >
+			<Label>Primary Green Level Level (0-255):</Label>
+			</Field>
+			<Field id="primaryblue" type="textfield" defaultValue="255" >
+			<Label>Primary Blue Level Level (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setSecondaryRGB" deviceFilter="self" >
+		<Name>Set Secondary RGB</Name>
+		<CallbackMethod>setSecondaryRGB</CallbackMethod>
+		<ConfigUI>
+			<Field id="secondaryred" type="textfield" defaultValue="255" >
+			<Label>Secondary Red Level Level (0-255):</Label>
+			</Field>
+			<Field id="secondarygreen" type="textfield" defaultValue="255" >
+			<Label>Secondary Green Level Level (0-255):</Label>
+			</Field>
+			<Field id="secondaryblue" type="textfield" defaultValue="255" >
+			<Label>Secondary Blue Level Level (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setPreset" deviceFilter="self">
+		<Name>Recall Preset</Name>
+		<CallbackMethod>setPreset</CallbackMethod>
+		<ConfigUI>
+			<Field id="preset" type="textfield" defaultValue="0" >
+			<Label>Select Preset (-1 to 65535):</Label>
+			<Label>Each unit is a duration of 100ms  (0-255):</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+</Actions>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<PluginConfig>
+	<Field id="topLabel" type="label" fontSize="small" fontColor="darkgray">
+		<Label>If you are having problems with the plugin (or you are instructed by support), you can enable extra logging in the Event Log window by checking this button. Use with caution.</Label>
+	</Field>
+	<Field id="showDebugInfo" type="checkbox">
+	<Label>Enable debuging:</Label>
+	<Description>(not recommended)</Description>
+	</Field>
+	<Field id="simpleseparator" type="separator">
+	</Field>
+	<Field id="midLabel" type="label" fontSize="small" fontColor="darkgray">
+		<Label>More frequent impacts the load on the NodeMCU but increases state update responsiveness. Use with caution.</Label>
+	</Field>
+	<Field id="pollingFrequency" type="textfield" defaultValue="60">
+	<Label>Enter Polling Frequency in Seconds:</Label>
+	</Field>
+	<Field id="midLabel2" type="label" fontSize="small" fontColor="darkgray">
+	<Label>WLED Devices can become less responsive under load (lots of LEDS etc), increase if you see timeout errors</Label>
+	</Field>
+<Field id="requeststimeout" type="textfield" defaultValue="1">
+	<Label>Enter timeout (seconds) for requests to the WLED API:</Label>
+	</Field>
+	<Field id="simpleseparator2" type="separator">
+	</Field>
+	<Field id="midLabel3" type="label" fontSize="small" fontColor="darkgray">
+	<Label>Restart Plugin in order to make changes here take effect</Label>
+	</Field>
+</PluginConfig>
+ 
