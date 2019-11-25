@@ -17,7 +17,7 @@
 			<Field type="textfield" id="address" defaultValue="- none -" hidden="true">
 				<Label>populate ui address field</Label>
 				<Description>duplicate of IP address to show in indigo UI</Description>
-			</Field>						
+			</Field>
 		</ConfigUI>
 		<States>
 			<State id="WLEDversion" defaultValue="Unknown">
@@ -133,6 +133,16 @@
 				<ValueType>Number</ValueType>
 				<TriggerLabel>Segment Number</TriggerLabel>
 				<ControlPageLabel>Segment Number</ControlPageLabel>
+			</State>
+				<State id="syncbroadcastUDP">
+				<ValueType boolType="YesNo">Boolean</ValueType>
+				<TriggerLabel>WLED UDP Broadcast</TriggerLabel>
+				<ControlPageLabel>UDP Broadcast</ControlPageLabel>
+			</State>
+			<State id="synctoUDP">
+				<ValueType boolType="YesNo">Boolean</ValueType>
+				<TriggerLabel>WLED UDP Synchronise</TriggerLabel>
+				<ControlPageLabel>UDP Synchronise</ControlPageLabel>
 			</State>
 		</States>
 	</Device>

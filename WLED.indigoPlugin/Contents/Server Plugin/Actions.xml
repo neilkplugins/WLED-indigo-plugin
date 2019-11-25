@@ -123,4 +123,25 @@
 			</Field>
 		</ConfigUI>
 	</Action>
+	<Action id="setUDPbroadcast" deviceFilter="self">
+		<Name>Set UDP Broadcast Mode</Name>
+		<CallbackMethod>setUDPbroadcast</CallbackMethod>
+		<ConfigUI>
+			<Field id="udpbroadcast" type="checkbox" defaultValue="False" >
+			<Label>Select to enable UDP Broadcast</Label>
+			<Label>Reflects/Adjusts the Sync Lights on the WLED UI</Label>
+			<Label>The WLED will brodcast it's status if set to true</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setUDPsync" deviceFilter="self">
+		<Name>Set to UDP Sync Mode</Name>
+		<CallbackMethod>setUDPsync</CallbackMethod>
+		<ConfigUI>
+			<Field id="udpsync" type="checkbox" defaultValue="False" >
+			<Label>Select to enable Sync </Label>
+			<Label>The WLED synchronise with the UDP brodcast if set to true</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
 </Actions>

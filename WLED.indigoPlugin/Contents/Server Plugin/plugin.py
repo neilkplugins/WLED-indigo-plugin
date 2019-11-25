@@ -132,6 +132,9 @@ class Plugin(indigo.PluginBase):
         device.updateStateOnServer("secondarybluevalue", statusjson['state']['seg'][0]['col'][1][2])
         device.updateStateOnServer("secondaryredvalue", statusjson['state']['seg'][0]['col'][1][0])
         device.updateStateOnServer("secondarygreenvalue", statusjson['state']['seg'][0]['col'][1][1])
+        device.updateStateOnServer("syncbroadcastUDP", statusjson['state']['udpn']['send'])
+        device.updateStateOnServer("synctoUDP", statusjson['state']['udpn']['recv'])
+
 
 
     ########################################
@@ -938,7 +941,7 @@ class Plugin(indigo.PluginBase):
 
                     # And then tell the Indigo Server to update the state:
                     dev.updateStateOnServer("effectintensity", neweffectintensity)
-                    
+
 ###### Increase Effect Speed by % ######
     def increaseEffectSpeed(self, pluginAction, dev):
                 self.debugLog(pluginAction)
@@ -994,3 +997,55 @@ class Plugin(indigo.PluginBase):
 
                     # And then tell the Indigo Server to update the state:
                     dev.updateStateOnServer("effectspeed", neweffectspeed)
+###### Set UDP Broadcast ######
+    def setUDPbroadcast(self, pluginAction, dev):
+                self.debugLog(pluginAction)
+                newsetUDPbroadcast = pluginAction.props.get("udpbroadcast")
+                self.debugLog("UDP Broadcast set to  "+str(newsetUDPbroadcast))
+                jsondata = json.dumps({ "udpn":{"send":newsetUDPbroadcast}})
+                self.debugLog(jsondata)
+                try:
+                    setudpresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
+                    self.debugLog(setudpresponse)
+                    if setudpresponse.status_code == 200:
+                            sendSuccess = True
+                    else:
+                            sendSuccess = False
+                except:
+                    sendSuccess = False
+
+#			sendSuccess = True		# Set to False if it failed.
+
+                if sendSuccess:
+                # If success then log that the command was successfully sent.
+                    indigo.server.log(u"sent \"%s\" %s to %s " % (dev.name, "Set UDPbroadcast to ",  newsetUDPbroadcast))
+
+                    # And then tell the Indigo Server to update the state:
+                    dev.updateStateOnServer("syncbroadcastUDP", newsetUDPbroadcast)
+
+###### Set UDP Sync ######
+    def setUDPsync(self, pluginAction, dev):
+                self.debugLog(pluginAction)
+                newsetUDPsync = pluginAction.props.get("udpsync")
+
+                self.debugLog("UDP Sync status set to "+str(newsetUDPsync))
+                jsondata = json.dumps({ "udpn":{"recv":newsetUDPsync}})
+                self.debugLog(jsondata)
+                try:
+                    setudpresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
+                    self.debugLog(setudpresponse)
+                    if setudpresponse.status_code == 200:
+                            sendSuccess = True
+                    else:
+                            sendSuccess = False
+                except:
+                    sendSuccess = False
+
+#			sendSuccess = True		# Set to False if it failed.
+
+                if sendSuccess:
+                # If success then log that the command was successfully sent.
+                    indigo.server.log(u"sent \"%s\" %s to %s " % (dev.name, "Set UDP Sync to ",  newsetUDPsync))
+
+                    # And then tell the Indigo Server to update the state:
+                    dev.updateStateOnServer("synctoUDP", newsetUDPsync)
