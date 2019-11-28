@@ -24,6 +24,7 @@ The plugin currently supports :-
 7) Presets can be recalled by an action which may be a good way to address issues that would require multiple actions otherwise.
 8) Some device states are for information only, or for future functionality (Night Light if anyone wants it, as you could do the same in Indigo) as well as WLED information like freeheap memory.
 9) You can submit support requests, feature requests, feedback or anything else to the  [plugin forum](https://forums.indigodomo.com/viewforum.php?f=319)
+10) A Beta release of the plugin is posted that adds support for the Sync functionality between strips.  This is largely complete, but I need to better describe the actions and the associated WLED behaviour.  I will complete this and create sync documentation before publishing as a real release in the store. 
 
 ### Cautions:
 
