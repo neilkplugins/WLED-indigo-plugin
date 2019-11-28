@@ -134,15 +134,15 @@
 				<TriggerLabel>Segment Number</TriggerLabel>
 				<ControlPageLabel>Segment Number</ControlPageLabel>
 			</State>
-				<State id="syncbroadcastUDP">
+				<State id="syncToBroadcastUDP">
 				<ValueType boolType="YesNo">Boolean</ValueType>
-				<TriggerLabel>WLED UDP Broadcast</TriggerLabel>
-				<ControlPageLabel>UDP Broadcast</ControlPageLabel>
+				<TriggerLabel>WLED UDP Sync to Broadcast</TriggerLabel>
+				<ControlPageLabel>WLED UDP Synchronise</ControlPageLabel>
 			</State>
-			<State id="synctoUDP">
+			<State id="sendToUDP">
 				<ValueType boolType="YesNo">Boolean</ValueType>
-				<TriggerLabel>WLED UDP Synchronise</TriggerLabel>
-				<ControlPageLabel>UDP Synchronise</ControlPageLabel>
+				<TriggerLabel>WLED UDP Synchronise Broadcast</TriggerLabel>
+				<ControlPageLabel>WLED UDP Broadcast</ControlPageLabel>
 			</State>
 		</States>
 	</Device>

@@ -79,6 +79,8 @@
 		<ConfigUI>
 			<Field id="transition" type="textfield" defaultValue="7" >
 			<Label>WLED Crossfade Level (0-255):</Label>
+			</Field>
+			<Field id="transhint" type="label" fontColor="darkgray">
 			<Label>Each unit is a duration of 100ms  (0-255):</Label>
 			</Field>
 		</ConfigUI>
@@ -119,28 +121,33 @@
 		<ConfigUI>
 			<Field id="preset" type="textfield" defaultValue="0" >
 			<Label>Select Preset (-1 to 65535):</Label>
-			<Label>Each unit is a duration of 100ms  (0-255):</Label>
 			</Field>
 		</ConfigUI>
 	</Action>
-	<Action id="setUDPbroadcast" deviceFilter="self">
-		<Name>Set UDP Broadcast Mode</Name>
-		<CallbackMethod>setUDPbroadcast</CallbackMethod>
+	<Action id="setsyncUDP" deviceFilter="self">
+		<Name>Set UDP Synchronise Mode</Name>
+		<CallbackMethod>setsyncUDP</CallbackMethod>
 		<ConfigUI>
-			<Field id="udpbroadcast" type="checkbox" defaultValue="False" >
-			<Label>Select to enable UDP Broadcast</Label>
+			<Field id="syncToBroadcastUDP" type="checkbox" defaultValue="False" >
+			<Label>Select to enable UDP Sync "Sync Lights" </Label>
+			</Field>
+			<Field id="label1" type="label" fontColor="darkgray">
 			<Label>Reflects/Adjusts the Sync Lights on the WLED UI</Label>
-			<Label>The WLED will brodcast it's status if set to true</Label>
+			</Field>
+			<Field id="label2" type="label" fontColor="darkgray">		
+			<Label>The WLED will follow UDP broadcasts when status set to true and another WLED broadcasts on the same port</Label>
 			</Field>
 		</ConfigUI>
 	</Action>
-	<Action id="setUDPsync" deviceFilter="self">
-		<Name>Set to UDP Sync Mode</Name>
-		<CallbackMethod>setUDPsync</CallbackMethod>
+	<Action id="setbroadcastUDP" deviceFilter="self">
+		<Name>Set UDP Broadcast Mode</Name>
+		<CallbackMethod>setbroadcastUDP</CallbackMethod>
 		<ConfigUI>
-			<Field id="udpsync" type="checkbox" defaultValue="False" >
-			<Label>Select to enable Sync </Label>
-			<Label>The WLED synchronise with the UDP brodcast if set to true</Label>
+			<Field id="sendToUDP" type="checkbox" defaultValue="False" >
+			<Label>Select to enable UDP Broadcast</Label>
+			</Field>
+			<Field id="synclabel1" type="label" fontColor="darkgray">
+			<Label>The WLED will broadcast the state to WLEDS on the same port if set to true</Label>
 			</Field>
 		</ConfigUI>
 	</Action>
