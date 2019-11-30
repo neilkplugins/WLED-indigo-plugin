@@ -124,30 +124,33 @@
 			</Field>
 		</ConfigUI>
 	</Action>
-	<Action id="setsyncUDP" deviceFilter="self">
-		<Name>Set UDP Synchronise Mode</Name>
-		<CallbackMethod>setsyncUDP</CallbackMethod>
+	<Action id="setUDPsend" deviceFilter="self">
+		<Name>Set UDP "send"</Name>
+		<CallbackMethod>setUDPsend</CallbackMethod>
 		<ConfigUI>
-			<Field id="syncToBroadcastUDP" type="checkbox" defaultValue="False" >
-			<Label>Select to enable UDP Sync "Sync Lights" </Label>
+			<Field id="UDPsend" type="checkbox" defaultValue="False" >
+			<Label>Select to enable UDP Sync Broadcast "send"</Label>
 			</Field>
 			<Field id="label1" type="label" fontColor="darkgray">
-			<Label>Reflects/Adjusts the Sync Lights on the WLED UI</Label>
+			<Label>Reflects/Adjusts the Sync Lights on the WLED "mobile" UI or bottom arrow on "classic" UI Sync Icon</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
+	<Action id="setUDPrecv" deviceFilter="self">
+		<Name>Set UDP "recv" </Name>
+		<CallbackMethod>setUDPrecv</CallbackMethod>
+		<ConfigUI>
+			<Field id="UDPrecv" type="checkbox" defaultValue="False" >
+			<Label>Select to enable UDP receive "recv"</Label>
+			</Field>
+			<Field id="synclabel1" type="label" fontColor="darkgray">
+			<Label>The WLED will receive UDP Broadcasts</Label>
 			</Field>
 			<Field id="label2" type="label" fontColor="darkgray">		
 			<Label>The WLED will follow UDP broadcasts when status set to true and another WLED broadcasts on the same port</Label>
 			</Field>
-		</ConfigUI>
-	</Action>
-	<Action id="setbroadcastUDP" deviceFilter="self">
-		<Name>Set UDP Broadcast Mode</Name>
-		<CallbackMethod>setbroadcastUDP</CallbackMethod>
-		<ConfigUI>
-			<Field id="sendToUDP" type="checkbox" defaultValue="False" >
-			<Label>Select to enable UDP Broadcast</Label>
-			</Field>
-			<Field id="synclabel1" type="label" fontColor="darkgray">
-			<Label>The WLED will broadcast the state to WLEDS on the same port if set to true</Label>
+			<Field id="label2" type="label" fontColor="darkgray">		
+			<Label>This also changes the top arrow on the "classic" WLED UI sync Icon</Label>
 			</Field>
 		</ConfigUI>
 	</Action>
