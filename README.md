@@ -24,11 +24,11 @@ The plugin currently supports :-
 7) Presets can be recalled by an action which may be a good way to address issues that would require multiple actions otherwise.
 8) Some device states are for information only, or for future functionality (Night Light if anyone wants it, as you could do the same in Indigo) as well as WLED information like freeheap memory.
 9) You can submit support requests, feature requests, feedback or anything else to the  [plugin forum](https://forums.indigodomo.com/viewforum.php?f=319)
-10) A Beta release of the plugin is posted that adds support for the Sync functionality between strips.  This is largely complete, but I need to better describe the actions and the associated WLED behaviour.  I will complete this and create sync documentation before publishing as a real release in the store. 
+10) A Beta release of the plugin is posted that adds support for the Sync functionality between strips.  This is largely complete, and the documentation is now updated.  I just need to complete a final round of testing before publushing as a formal release and into the plugin store
 
 ### Cautions:
 
-I am not an expert on WLED and the test usage is a single strip.  I have not tested this with large LED numbers, or with some of the more advanced WLED functionality.
+I am not an expert on WLED and the test usage with two strips and WLED controllers.  I have not tested this with large LED numbers, or with some of the more advanced WLED functionality. Other indigo forum members have larger real world installs.
 
 
 As this is the first version of my first plugin, so usage is at your own risk ! By using this version you are joining my virtual testing team, welcome on board and thanks for the help !  I would love to hear your feedback and thoughts.
@@ -39,7 +39,7 @@ Thanks for the inspiration and support from the Indigo Community, I would not ha
 
 # Cautions:
 
-I am not an expert on WLED and the test usage is a single strip.  I have not tested this with large LED numbers, or with some of the more advanced WLED functionality.
+I have not tested this with large LED numbers, or with some of the more advanced WLED functionality.
 
 
 As this is the first version of my first plugin, so usage is at your own risk ! By using this version you are joining my virtual testing team, welcome on board and thanks for the help !  I would love to hear your feedback and thoughts.
