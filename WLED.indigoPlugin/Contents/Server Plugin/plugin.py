@@ -1054,9 +1054,9 @@ class Plugin(indigo.PluginBase):
                 self.debugLog(pluginAction)
                 newsetCycleBoolean = pluginAction.props.get("PresetCycle")
                 if newsetCycleBoolean :
-                	newsetCycle = "0"
+                	newsetCycle = 0
                 else:
-                	newsetCycle = "-1"        	
+                	newsetCycle = -1        	
                 self.debugLog("Cycle set to "+str(newsetCycle))
                 jsondata = json.dumps({ "pl":newsetCycle})
                 self.debugLog(jsondata)
