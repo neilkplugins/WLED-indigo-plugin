@@ -83,7 +83,7 @@ class Plugin(indigo.PluginBase):
     def update(self,device):
         self.debugLog("Updating device: " + device.name)
         requestsTimeOut = float(self.pluginPrefs.get('requeststimeout'))
-        theUrl = u"http://"+ device.pluginProps["ipaddress"]+ "/json"
+        theUrl = u"http://%s/json" % device.pluginProps[u"ipaddress"]   # Python 2.7 Style
         try:
             response = requests.get(theUrl, timeout=requestsTimeOut)
             response.raise_for_status()
@@ -1048,3 +1048,34 @@ class Plugin(indigo.PluginBase):
 
                     # And then tell the Indigo Server to update the state:
                     dev.updateStateOnServer("UDPrecv", newsetUDPrecv)
+
+###### Set to Sync Preset ######
+    def setCycle(self, pluginAction, dev):
+                self.debugLog(pluginAction)
+                newsetCycleBoolean = pluginAction.props.get("PresetCycle")
+                if newsetCycleBoolean :
+                	newsetCycle = "0"
+                else:
+                	newsetCycle = "-1"        	
+                self.debugLog("Cycle set to "+str(newsetCycle))
+                jsondata = json.dumps({ "pl":newsetCycle})
+                self.debugLog(jsondata)
+                try:
+                    setudpresponse = requests.post('http://'+ dev.pluginProps["ipaddress"] + theUrlBase,data=jsondata,timeout=float(self.pluginPrefs["requeststimeout"]))
+                    self.debugLog(setudpresponse)
+                    if setudpresponse.status_code == 200:
+                            sendSuccess = True
+                    else:
+                            sendSuccess = False
+                except:
+                    sendSuccess = False
+
+#			sendSuccess = True		# Set to False if it failed.
+
+                if sendSuccess:
+                # If success then log that the command was successfully sent.
+                    indigo.server.log(u"sent \"%s\" %s to %s " % (dev.name, "Set Cycle",  newsetCycle))
+
+                    # And then tell the Indigo Server to update the state:
+                    dev.updateStateOnServer("preset", newsetCycle)
+

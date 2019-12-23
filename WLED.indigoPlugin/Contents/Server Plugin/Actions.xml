@@ -154,4 +154,13 @@
 			</Field>
 		</ConfigUI>
 	</Action>
+	<Action id="setCycle" deviceFilter="self">
+		<Name>Set Preset Cycle</Name>
+		<CallbackMethod>setCycle</CallbackMethod>
+		<ConfigUI>
+			<Field id="PresetCycle" type="checkbox" defaultValue="False" >
+			<Label>Select to enable preset Cycle Feature</Label>
+			</Field>
+		</ConfigUI>
+	</Action>
 </Actions>
