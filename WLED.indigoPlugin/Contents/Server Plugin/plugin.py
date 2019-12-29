@@ -102,7 +102,11 @@ class Plugin(indigo.PluginBase):
         #Un comment below to help diagnose JSON state changes for testing
         #self.debugLog(statusjson)
         # parse out the elements which I know is really ugly, I will sort this to do it properly I promise
-
+        # Quick and dirty expose of Wifi data from WLED 0.9.0 when debugging toggled
+        try:
+        	self.debugLog("WLED Device %s Signal %s Channel %s BSSID %s" % (device.name, statusjson['info']['wifi']['signal'], str(statusjson['info']['wifi']['channel']), str(statusjson['info']['wifi']['bssid'])))
+        except:
+        	self.debugLog("WLED Device %s is version %s which does not report WIFI data" % (device.name, statusjson['info']['ver']))
         #calculate the UI adjusted brightness to match the UI (0 -100 %) versus 0-255 for device
         adjustedbrightness = int(round(int(statusjson['state']['bri'])/2.55))
         #Update Device States
@@ -441,6 +445,7 @@ class Plugin(indigo.PluginBase):
             indigo.server.log("Turning on debug logging")
             self.pluginPrefs["showDebugInfo"] = True
         self.debug = not self.debug
+            	
 
     ########################################
     # Relay / Dimmer Action callback
