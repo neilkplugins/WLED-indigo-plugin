@@ -21,10 +21,10 @@ The plugin currently supports :-
 4) The Indigo Dimmer device, and "Set Brightness" actions control the master WLED brightness, as well as "Dim by", "Brighten by" and "Toggle" actions.
 5) I have implemented the most important of the effect and palette related options, including Effect, Palette, Speed, Intensity and Transition.  I will investigate what if any support for macros makes sense for a future version.
 6) The Primary and Secondary RGB colours can be set by two respective actions, and the effects that use them as a base will work the same as via the app.
-7) Presets can be recalled by an action which may be a good way to address issues that would require multiple actions otherwise.
+7) Presets can be recalled by an action which may be a good way to address issues that would require multiple actions otherwise.  The preset "sync" option can be controlled via the preset sync option.
 8) Some device states are for information only, or for future functionality (Night Light if anyone wants it, as you could do the same in Indigo) as well as WLED information like freeheap memory.
 9) You can submit support requests, feature requests, feedback or anything else to the  [plugin forum](https://forums.indigodomo.com/viewforum.php?f=319)
-10) A Beta release of the plugin is posted that adds support for the Sync functionality between strips.  This is largely complete, and the documentation is now updated.  I just need to complete a final round of testing before publushing as a formal release and into the plugin store
+
 
 ### Cautions:
 
