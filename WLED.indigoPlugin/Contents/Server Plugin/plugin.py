@@ -49,11 +49,14 @@ class Plugin(indigo.PluginBase):
 
     ########################################
     def deviceStartComm(self, device):
-        self.debugLog("Starting device: " + device.name)
-        self.debugLog(str(device.id)+ " " + device.name)
-        if device.id not in self.deviceList:
-            self.update(device)
-            self.deviceList.append(device.id)
+		self.debugLog("Starting device: " + device.name)
+		self.debugLog(str(device.id)+ " " + device.name)
+		#Update Device States after upgrade
+		device.stateListOrDisplayStateIdChanged()
+		if device.id not in self.deviceList:
+			self.update(device)
+			self.deviceList.append(device.id)
+   
 
 
 
