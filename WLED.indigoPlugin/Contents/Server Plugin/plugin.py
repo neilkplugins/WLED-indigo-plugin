@@ -49,13 +49,13 @@ class Plugin(indigo.PluginBase):
 
     ########################################
     def deviceStartComm(self, device):
-		self.debugLog("Starting device: " + device.name)
-		self.debugLog(str(device.id)+ " " + device.name)
-		#Update Device States after upgrade
-		device.stateListOrDisplayStateIdChanged()
-		if device.id not in self.deviceList:
-			self.update(device)
-			self.deviceList.append(device.id)
+        self.debugLog("Starting device: " + device.name)
+        self.debugLog(str(device.id)+ " " + device.name)
+        #Update Device States after upgrade
+        device.stateListOrDisplayStateIdChanged()
+        if device.id not in self.deviceList:
+            self.update(device)
+            self.deviceList.append(device.id)
    
 
 
@@ -69,9 +69,12 @@ class Plugin(indigo.PluginBase):
     ########################################
     def runConcurrentThread(self):
         self.debugLog("Starting concurrent thread")
-        pollingFreq = int(self.pluginPrefs['pollingFrequency'])
         try:
             while True:
+                try:
+                    pollingFreq = int(self.pluginPrefs['pollingFrequency'])
+                except:
+                    pollingFreq = 15
                 # we sleep (by a user defined amount, default 60s) first because when the plugin starts, each device
                 # is updated as they are started.
                 self.sleep(1 * pollingFreq )
@@ -94,7 +97,7 @@ class Plugin(indigo.PluginBase):
             self.errorLog("HTTP error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
             device.setErrorStateOnServer('Not Responding')
             return
-        except Exception, e:
+        except Exception as e:
             self.errorLog("Unknown error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
             device.setErrorStateOnServer('Not Responding')
             return
@@ -107,9 +110,9 @@ class Plugin(indigo.PluginBase):
         # parse out the elements which I know is really ugly, I will sort this to do it properly I promise
         # Quick and dirty expose of Wifi data from WLED 0.9.0 when debugging toggled
         try:
-        	self.debugLog("WLED Device %s Signal %s Channel %s BSSID %s" % (device.name, statusjson['info']['wifi']['signal'], str(statusjson['info']['wifi']['channel']), str(statusjson['info']['wifi']['bssid'])))
+            self.debugLog("WLED Device %s Signal %s Channel %s BSSID %s" % (device.name, statusjson['info']['wifi']['signal'], str(statusjson['info']['wifi']['channel']), str(statusjson['info']['wifi']['bssid'])))
         except:
-        	self.debugLog("WLED Device %s is version %s which does not report WIFI data" % (device.name, statusjson['info']['ver']))
+            self.debugLog("WLED Device %s is version %s which does not report WIFI data" % (device.name, statusjson['info']['ver']))
         #calculate the UI adjusted brightness to match the UI (0 -100 %) versus 0-255 for device
         adjustedbrightness = int(round(int(statusjson['state']['bri'])/2.55))
         #Update Device States
@@ -196,7 +199,7 @@ class Plugin(indigo.PluginBase):
             errorsDict['ipaddress'] = "WLED not found or isn't responding"
             self.errorLog("Error getting WLED data: %s" % wledIP)
             return (False, valuesDict, errorsDict)
-        except Exception, e:
+        except Exception as e:
             errorsDict = indigo.Dict()
             errorsDict['ipaddress'] = "Unknown error connecting to WLED"
             self.errorLog("Unknown Error getting WLED data: %s Check IP address" % wledIP)
@@ -475,7 +478,7 @@ class Plugin(indigo.PluginBase):
             indigo.server.log("Turning on debug logging")
             self.pluginPrefs["showDebugInfo"] = True
         self.debug = not self.debug
-            	
+
 
     ########################################
     # Relay / Dimmer Action callback
@@ -682,7 +685,7 @@ class Plugin(indigo.PluginBase):
         except requests.exceptions.HTTPError as e:
             self.errorLog("HTTP error getting WLED %s effect data: %s" % (device.pluginProps["ipaddress"], str(e)))
             return
-        except Exception, e:
+        except Exception as e:
             self.errorLog("Unknown error getting WLED effect %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
             return
         effectlist = json.loads(effectjson.text)
@@ -703,7 +706,7 @@ class Plugin(indigo.PluginBase):
         except requests.exceptions.HTTPError as e:
             self.errorLog("HTTP error getting WLED %s palette data: %s" % (device.pluginProps["ipaddress"], str(e)))
             return
-        except Exception, e:
+        except Exception as e:
             self.errorLog("Unknown error getting WLED palette %s data: %s" % (device.pluginProps["ipaddress"], str(e)))
             return
         palettelist = json.loads(palettejson.text)
@@ -926,7 +929,7 @@ class Plugin(indigo.PluginBase):
                 self.debugLog(pluginAction)
                 neweffectintensity = int(dev.states["effectintensity"] + (int(pluginAction.props.get("increaseeffectintensity")) *2.55))
                 if neweffectintensity > 255:
-                	neweffectintensity = 255
+                    neweffectintensity = 255
                 self.debugLog("New Increased Effect Intensity "+str(neweffectintensity))
                 jsondata = json.dumps({ "seg":[{"ix":neweffectintensity}]})
                 self.debugLog(jsondata)
@@ -954,7 +957,7 @@ class Plugin(indigo.PluginBase):
                 self.debugLog(pluginAction)
                 neweffectintensity = int(dev.states["effectintensity"] - (int(pluginAction.props.get("decreaseeffectintensity")) *2.55))
                 if neweffectintensity < 0:
-                	neweffectintensity = 0
+                    neweffectintensity = 0
                 self.debugLog("New Decreased Effect Intensity "+str(neweffectintensity))
                 jsondata = json.dumps({ "seg":[{"ix":neweffectintensity}]})
                 self.debugLog(jsondata)
@@ -982,7 +985,7 @@ class Plugin(indigo.PluginBase):
                 self.debugLog(pluginAction)
                 neweffectspeed = int(dev.states["effectspeed"] + (int(pluginAction.props.get("increaseeffectspeed")) *2.55))
                 if neweffectspeed > 255:
-                	neweffectspeed = 255
+                    neweffectspeed = 255
                 self.debugLog("New Increased Effect Speed "+str(neweffectspeed))
                 jsondata = json.dumps({ "seg":[{"sx":neweffectspeed}]})
                 self.debugLog(jsondata)
@@ -1010,7 +1013,7 @@ class Plugin(indigo.PluginBase):
                 self.debugLog(pluginAction)
                 neweffectspeed = int(dev.states["effectspeed"] - (int(pluginAction.props.get("decreaseeffectspeed")) *2.55))
                 if neweffectspeed < 0:
-                	neweffectspeed = 0
+                    neweffectspeed = 0
                 self.debugLog("New Decreased Effect Speed "+str(neweffectspeed))
                 jsondata = json.dumps({ "seg":[{"sx":neweffectspeed}]})
                 self.debugLog(jsondata)
@@ -1089,9 +1092,9 @@ class Plugin(indigo.PluginBase):
                 self.debugLog(pluginAction)
                 newsetCycleBoolean = pluginAction.props.get("PresetCycle")
                 if newsetCycleBoolean :
-                	newsetCycle = 0
+                    newsetCycle = 0
                 else:
-                	newsetCycle = -1        	
+                    newsetCycle = -1
                 self.debugLog("Cycle set to "+str(newsetCycle))
                 jsondata = json.dumps({ "pl":newsetCycle})
                 self.debugLog(jsondata)
