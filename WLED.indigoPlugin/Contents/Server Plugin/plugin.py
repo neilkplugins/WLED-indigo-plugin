@@ -256,7 +256,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['effectintensity'] = "Invalid entry for Effect Intensity - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['effectintensity']))
-            if  not(int(valuesDict['effectintensity']) in xrange(0,256)):
+            if  not(int(valuesDict['effectintensity']) in range(0,256)):
 
             #if 0 <= int(valuesDict['effectintensity']) >= 256:
                 self.errorLog("Invalid entry for Effect Intensity - must be a whole number between 0 and 255")
@@ -273,7 +273,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['increaseeffectintensity'] = "Invalid entry for Increase Effect Intensity - must be a whole number between 1 and 100"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['increaseeffectintensity']))
-            if  not(int(valuesDict['increaseeffectintensity']) in xrange(1,101)):
+            if  not(int(valuesDict['increaseeffectintensity']) in range(1,101)):
 
                 self.errorLog("Invalid entry for Increase Effect Intensity - must be a whole number between 1 and 100")
                 errorsDict = indigo.Dict()
@@ -289,7 +289,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['decreaseeffectintensity'] = "Invalid entry for  Decrease Effect Intensity - must be a whole number between 1 and 100"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['decreaseeffectintensity']))
-            if  not(int(valuesDict['decreaseeffectintensity']) in xrange(1,101)):
+            if  not(int(valuesDict['decreaseeffectintensity']) in range(1,101)):
 
                 self.errorLog("Invalid entry for Decrease Effect Intensity - must be a whole number between 1 and 100")
                 errorsDict = indigo.Dict()
@@ -305,7 +305,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['effectspeed'] = "Invalid entry for Effect Speed - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['effectspeed']))
-            if not(int(valuesDict['effectspeed']) in xrange(0,256)):
+            if not(int(valuesDict['effectspeed']) in range(0,256)):
                 self.errorLog("Invalid entry for Effect Speed - must be a whole number between 0 and 255")
                 errorsDict = indigo.Dict()
                 errorsDict['effectspeed'] = "Invalid entry for Effect Speed - must be a whole number between 0 and 255"
@@ -320,7 +320,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['increaseeffectspeed'] = "Invalid entry for Increase Effect Speed - must be a whole number between 1 and 100"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['increaseeffectspeed']))
-            if  not(int(valuesDict['increaseeffectspeed']) in xrange(1,101)):
+            if  not(int(valuesDict['increaseeffectspeed']) in range(1,101)):
 
                 self.errorLog("Invalid entry for Increase Effect Speed - must be a whole number between 1 and 100")
                 errorsDict = indigo.Dict()
@@ -336,7 +336,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['decreaseeffectspeed'] = "Invalid entry for  Decrease Effect Speed - must be a whole number between 1 and 100"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['decreaseeffectspeed']))
-            if  not(int(valuesDict['decreaseeffectspeed']) in xrange(1,101)):
+            if  not(int(valuesDict['decreaseeffectspeed']) in range(1,101)):
 
                 self.errorLog("Invalid entry for Decrease Effect speed - must be a whole number between 1 and 100")
                 errorsDict = indigo.Dict()
@@ -352,7 +352,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['transition'] = "Invalid entry for Crossfade - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['transition']))
-            if not(int(valuesDict['transition']) in xrange(0,256)):
+            if not(int(valuesDict['transition']) in range(0,256)):
                 self.errorLog("Invalid entry for Crossfade - must be a whole number between 0 and 255")
                 errorsDict = indigo.Dict()
                 errorsDict['transition'] = "Invalid entry for Crossfade - must be a whole number between 0 and 255"
@@ -364,10 +364,10 @@ class Plugin(indigo.PluginBase):
             except:
                 self.errorLog("Invalid entry for Preset - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
-                errorsDict['transition'] = "Invalid entry for Preset - must be a whole number between -1 and 65535"
+                errorsDict['preset'] = "Invalid entry for Preset - must be a whole number between -1 and 65535"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['preset']))
-            if not(int(valuesDict['preset']) in xrange(-1,65536)):
+            if not(int(valuesDict['preset']) in range(-1,65536)):
                 self.errorLog("Invalid entry for Preset - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
                 errorsDict['preset'] = "Invalid entry for Preset - must be a whole number between 0 and 255"
@@ -382,7 +382,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['primaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['primaryblue']))
-            if not(int(valuesDict['primaryblue']) in xrange(0,256)):
+            if not(int(valuesDict['primaryblue']) in range(0,256)):
                 self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
                 errorsDict['primaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
@@ -397,7 +397,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['primaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['primaryred']))
-            if not(int(valuesDict['primaryred']) in xrange(0,256)):
+            if not(int(valuesDict['primaryred']) in range(0,256)):
                 self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
                 errorsDict['primaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
@@ -412,7 +412,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['primarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['primarygreen']))
-            if not(int(valuesDict['primarygreen']) in xrange(0,256)):
+            if not(int(valuesDict['primarygreen']) in range(0,256)):
                 self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
                 errorsDict['primarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
@@ -427,7 +427,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['secondaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['secondaryblue']))
-            if not(int(valuesDict['secondaryblue']) in xrange(0,256)):
+            if not(int(valuesDict['secondaryblue']) in range(0,256)):
                 self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
                 errorsDict['secondaryblue'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
@@ -442,7 +442,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['secondaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['secondaryred']))
-            if not(int(valuesDict['secondaryred']) in xrange(0,256)):
+            if not(int(valuesDict['secondaryred']) in range(0,256)):
                 self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
                 errorsDict['secondaryred'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
@@ -457,7 +457,7 @@ class Plugin(indigo.PluginBase):
                 errorsDict['secondarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
                 return (False, valuesDict, errorsDict)
             self.debugLog(int(valuesDict['secondarygreen']))
-            if not(int(valuesDict['secondarygreen']) in xrange(0,256)):
+            if not(int(valuesDict['secondarygreen']) in range(0,256)):
                 self.errorLog("Invalid entry for Colour - must be a whole number between -1 and 65535")
                 errorsDict = indigo.Dict()
                 errorsDict['secondarygreen'] = "Invalid entry for Colour - must be a whole number between 0 and 255"
