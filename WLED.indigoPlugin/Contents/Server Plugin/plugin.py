@@ -89,17 +89,17 @@ class Plugin(indigo.PluginBase):
     def update(self,device):
         self.debugLog("Updating device: " + device.name)
         requestsTimeOut = float(self.pluginPrefs.get('requeststimeout'))
-        theUrl = u"http://%s/json" % device.pluginProps[u"ipaddress"]   # Python 2.7 Style
+        theUrl = "http://%s/json" % device.pluginProps[u"ipaddress"]   # Python 2.7 Style
         try:
             response = requests.get(theUrl, timeout=requestsTimeOut)
             response.raise_for_status()
         except requests.exceptions.HTTPError as e:
-            self.errorLog("HTTP error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
-            device.setErrorStateOnServer('Not Responding')
+            self.debugLog("HTTP error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
+            device.setErrorStateOnServer('WLED Offline')
             return
         except Exception as e:
-            self.errorLog("Unknown error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
-            device.setErrorStateOnServer('Not Responding')
+            self.debugLog("Unknown error getting %s %s data: %s" % (device.name,device.pluginProps["ipaddress"], str(e)))
+            device.setErrorStateOnServer('WLED Offline')
             return
         #Get the JSON from the WLED to update device states
         statusjson = json.loads(response.text)
@@ -188,7 +188,7 @@ class Plugin(indigo.PluginBase):
         wledIP = valuesDict['ipaddress']
         valuesDict['ipaddress'] = wledIP
         valuesDict['address'] = wledIP
-        theUrl = u"http://"+ wledIP+ theUrlBase
+        theUrl = "http://"+ wledIP+ theUrlBase
 
 
         try:
