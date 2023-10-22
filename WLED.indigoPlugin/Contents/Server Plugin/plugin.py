@@ -102,9 +102,16 @@ class Plugin(indigo.PluginBase):
             device.setErrorStateOnServer('WLED Offline')
             return
         #Get the JSON from the WLED to update device states
-        statusjson = json.loads(response.text)
-        wledeffects = statusjson['effects']
-        wledpalettes = statusjson['palettes']
+        try:
+            statusjson = json.loads(response.text)
+            wledeffects = statusjson['effects']
+            wledpalettes = statusjson['palettes']
+        except Exception as e:
+            self.debugLog(
+                "Unknown error decoding %s %s data: %s" % (device.name, device.pluginProps["ipaddress"], str(e)))
+            device.setErrorStateOnServer('WLED Offline')
+            return
+
         #Un comment below to help diagnose JSON state changes for testing
         #self.debugLog(statusjson)
         # parse out the elements which I know is really ugly, I will sort this to do it properly I promise
